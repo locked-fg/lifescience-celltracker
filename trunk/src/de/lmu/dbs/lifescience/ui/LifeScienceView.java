@@ -306,6 +306,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             // change logo and background of imagewindow
             model.getImage().getWindow().setIconImage(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-logo.png")).getImage());
             model.getImage().getWindow().setBackground(new Color(240, 240, 240));
+            // change mouselistener of image window
+            model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
             // update info
             this.jLabel6.setText(model.getImageInfoString());
             // update buttons
