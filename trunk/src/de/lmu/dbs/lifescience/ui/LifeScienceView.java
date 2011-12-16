@@ -26,7 +26,7 @@ import java.util.Observer;
  * 
  * @author bea
  */
-public class LifeScienceView extends javax.swing.JFrame implements Observer {
+public class LifeScienceView extends javax.swing.JFrame implements Observer, ActionListener {
 
     /** Creates new form LifeScienceGUI 
      * 
@@ -47,19 +47,26 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jButtonImport = new javax.swing.JButton();
+        jButtonDetection = new javax.swing.JButton();
+        jButtonExport = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
+        jPanelSequence = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabelSequenceFrame = new javax.swing.JLabel();
+        jButtonSequencePrev = new javax.swing.JButton();
+        jButtonSequenceNext = new javax.swing.JButton();
+        jLabelSequenceInfo = new javax.swing.JLabel();
+        jPanelDetection = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabelDetectionNumbering = new javax.swing.JLabel();
+        jToggleButtonDetectionLabels = new javax.swing.JToggleButton();
+        jLabelDetectionInfo = new javax.swing.JLabel();
+        jPanelExport = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabelExportInfo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LifeScience");
@@ -67,29 +74,29 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), "Steps", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 12), java.awt.Color.lightGray)); // NOI18N
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel1.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jPanel1.setFont(new java.awt.Font("Verdana", 0, 11));
         jPanel1.setPreferredSize(new java.awt.Dimension(160, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()-80));
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jButton1.setForeground(new java.awt.Color(33, 90, 167));
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-import.png"))); // NOI18N
-        jButton1.setToolTipText("Opens a file chooser to select TIF Sequence");
-        jButton1.setLabel("Import TIF");
+        jButtonImport.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButtonImport.setForeground(new java.awt.Color(33, 90, 167));
+        jButtonImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-import.png"))); // NOI18N
+        jButtonImport.setToolTipText("Opens a file chooser to select TIF Sequence");
+        jButtonImport.setLabel("Import TIF");
 
-        jButton2.setForeground(new java.awt.Color(33, 90, 167));
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-detect.png"))); // NOI18N
-        jButton2.setToolTipText("Detect nuclei in image...");
-        jButton2.setEnabled(false);
-        jButton2.setLabel("Detect Cells");
-        jButton2.setMaximumSize(new java.awt.Dimension(83, 23));
-        jButton2.setMinimumSize(new java.awt.Dimension(83, 23));
+        jButtonDetection.setForeground(new java.awt.Color(33, 90, 167));
+        jButtonDetection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-detect.png"))); // NOI18N
+        jButtonDetection.setToolTipText("Detect nuclei in image...");
+        jButtonDetection.setEnabled(false);
+        jButtonDetection.setLabel("Detect Cells");
+        jButtonDetection.setMaximumSize(new java.awt.Dimension(83, 23));
+        jButtonDetection.setMinimumSize(new java.awt.Dimension(83, 23));
 
-        jButton3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jButton3.setForeground(new java.awt.Color(33, 90, 167));
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-export.png"))); // NOI18N
-        jButton3.setToolTipText("Export detected cells as csv...");
-        jButton3.setEnabled(false);
-        jButton3.setLabel("Export CSV");
+        jButtonExport.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButtonExport.setForeground(new java.awt.Color(33, 90, 167));
+        jButtonExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-export.png"))); // NOI18N
+        jButtonExport.setToolTipText("Export detected cells as csv...");
+        jButtonExport.setEnabled(false);
+        jButtonExport.setLabel("Export CSV");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-spacer.png"))); // NOI18N
@@ -104,99 +111,203 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(jButtonImport, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                    .addComponent(jButtonDetection, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+                    .addComponent(jButtonExport, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonImport, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonDetection, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(516, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), "Info", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 12), java.awt.Color.lightGray)); // NOI18N
         jPanel2.setPreferredSize(new java.awt.Dimension(200, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()-80));
 
-        jButton4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-next.png"))); // NOI18N
-        jButton4.setActionCommand("Next Frame");
-        jButton4.setEnabled(false);
+        jLabel10.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel10.setText("Sequence");
+        jLabel10.setToolTipText("");
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-prev.png"))); // NOI18N
-        jButton5.setActionCommand("Previous Frame");
-        jButton5.setEnabled(false);
+        jLabelSequenceFrame.setForeground(new java.awt.Color(89, 97, 107));
+        jLabelSequenceFrame.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabelSequenceFrame.setToolTipText("");
 
-        jLabel4.setForeground(new java.awt.Color(89, 97, 107));
-        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel4.setToolTipText("");
+        jButtonSequencePrev.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-prev.png"))); // NOI18N
+        jButtonSequencePrev.setToolTipText("Go to previous frame of the sequence.");
+        jButtonSequencePrev.setActionCommand("Previous Frame");
+        jButtonSequencePrev.setEnabled(false);
 
-        jLabel6.setForeground(new java.awt.Color(89, 97, 107));
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel6.setToolTipText("");
-        jLabel6.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jButtonSequenceNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-next.png"))); // NOI18N
+        jButtonSequenceNext.setToolTipText("Go to next frame of the sequence.");
+        jButtonSequenceNext.setActionCommand("Next Frame");
+        jButtonSequenceNext.setEnabled(false);
 
-        jLabel7.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel7.setText("Sequence:");
-        jLabel7.setToolTipText("");
+        jLabelSequenceInfo.setForeground(new java.awt.Color(89, 97, 107));
+        jLabelSequenceInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabelSequenceInfo.setToolTipText("");
+        jLabelSequenceInfo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
 
-        jLabel8.setForeground(new java.awt.Color(153, 153, 153));
-        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel8.setToolTipText("");
+        javax.swing.GroupLayout jPanelSequenceLayout = new javax.swing.GroupLayout(jPanelSequence);
+        jPanelSequence.setLayout(jPanelSequenceLayout);
+        jPanelSequenceLayout.setHorizontalGroup(
+            jPanelSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                        .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                        .addGap(92, 92, 92))
+                    .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                        .addComponent(jLabelSequenceFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButtonSequencePrev, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButtonSequenceNext, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
+        );
+        jPanelSequenceLayout.setVerticalGroup(
+            jPanelSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabelSequenceFrame, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED))
+                    .addGroup(jPanelSequenceLayout.createSequentialGroup()
+                        .addGroup(jPanelSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButtonSequencePrev)
+                            .addComponent(jButtonSequenceNext))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        jLabel9.setForeground(new java.awt.Color(89, 97, 107));
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel9.setToolTipText("");
-        jLabel9.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        jLabelSequenceInfo.getAccessibleContext().setAccessibleName("");
+
+        jLabel11.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel11.setText("Detection");
+        jLabel11.setToolTipText("");
+
+        jLabelDetectionNumbering.setForeground(new java.awt.Color(89, 97, 107));
+        jLabelDetectionNumbering.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabelDetectionNumbering.setText("Numbering");
+        jLabelDetectionNumbering.setToolTipText("");
+
+        jToggleButtonDetectionLabels.setText("show");
+        jToggleButtonDetectionLabels.setToolTipText("Show labels of nuclei.");
+        jToggleButtonDetectionLabels.addActionListener(this);
+
+        jLabelDetectionInfo.setForeground(new java.awt.Color(89, 97, 107));
+        jLabelDetectionInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabelDetectionInfo.setToolTipText("");
+        jLabelDetectionInfo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout jPanelDetectionLayout = new javax.swing.GroupLayout(jPanelDetection);
+        jPanelDetection.setLayout(jPanelDetectionLayout);
+        jPanelDetectionLayout.setHorizontalGroup(
+            jPanelDetectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDetectionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelDetectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelDetectionLayout.createSequentialGroup()
+                        .addComponent(jLabel11, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                        .addGap(92, 92, 92))
+                    .addGroup(jPanelDetectionLayout.createSequentialGroup()
+                        .addComponent(jLabelDetectionNumbering, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                        .addGap(11, 11, 11)
+                        .addComponent(jToggleButtonDetectionLabels)
+                        .addContainerGap())
+                    .addGroup(jPanelDetectionLayout.createSequentialGroup()
+                        .addComponent(jLabelDetectionInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                        .addContainerGap())))
+        );
+        jPanelDetectionLayout.setVerticalGroup(
+            jPanelDetectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelDetectionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanelDetectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToggleButtonDetectionLabels)
+                    .addComponent(jLabelDetectionNumbering, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabelDetectionInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(72, Short.MAX_VALUE))
+        );
+
+        jLabel12.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel12.setText("Export");
+        jLabel12.setToolTipText("");
+
+        jLabelExportInfo.setForeground(new java.awt.Color(89, 97, 107));
+        jLabelExportInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabelExportInfo.setToolTipText("");
+        jLabelExportInfo.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+        javax.swing.GroupLayout jPanelExportLayout = new javax.swing.GroupLayout(jPanelExport);
+        jPanelExport.setLayout(jPanelExportLayout);
+        jPanelExportLayout.setHorizontalGroup(
+            jPanelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelExportLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelExportLayout.createSequentialGroup()
+                        .addComponent(jLabelExportInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jPanelExportLayout.createSequentialGroup()
+                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                        .addGap(92, 92, 92))))
+        );
+        jPanelExportLayout.setVerticalGroup(
+            jPanelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelExportLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelExportInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE))
-                .addContainerGap())
+            .addComponent(jPanelSequence, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelDetection, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanelExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(17, 17, 17)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jPanelSequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton5))
+                .addComponent(jPanelDetection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(349, Short.MAX_VALUE))
+                .addComponent(jPanelExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(227, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -223,7 +334,19 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jPanel2.getAccessibleContext().setAccessibleDescription("");
 
         pack();
+    }
+
+    // Code for dispatching events from components to event handlers.
+
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        if (evt.getSource() == jToggleButtonDetectionLabels) {
+            LifeScienceView.this.jToggleButtonDetectionLabelsActionPerformed(evt);
+        }
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jToggleButtonDetectionLabelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonDetectionLabelsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jToggleButtonDetectionLabelsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -250,20 +373,27 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButtonDetection;
+    private javax.swing.JButton jButtonExport;
+    private javax.swing.JButton jButtonImport;
+    private javax.swing.JButton jButtonSequenceNext;
+    private javax.swing.JButton jButtonSequencePrev;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelDetectionInfo;
+    private javax.swing.JLabel jLabelDetectionNumbering;
+    private javax.swing.JLabel jLabelExportInfo;
+    private javax.swing.JLabel jLabelSequenceFrame;
+    private javax.swing.JLabel jLabelSequenceInfo;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanelDetection;
+    private javax.swing.JPanel jPanelExport;
+    private javax.swing.JPanel jPanelSequence;
+    private javax.swing.JToggleButton jToggleButtonDetectionLabels;
     // End of variables declaration//GEN-END:variables
 
     
@@ -273,12 +403,17 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
      * @param controller 
      */
     public void initController(ActionListener controller){
-        this.jButton1.addActionListener(controller);
-        this.jButton2.addActionListener(controller);
-        this.jButton3.addActionListener(controller);
-        this.jButton4.addActionListener(controller);
-        this.jButton5.addActionListener(controller);
-        this.addWindowListener((WindowListener) controller);             
+        this.jButtonImport.addActionListener(controller);
+        this.jButtonDetection.addActionListener(controller);
+        this.jButtonExport.addActionListener(controller);
+        this.jButtonSequenceNext.addActionListener(controller);
+        this.jButtonSequencePrev.addActionListener(controller);
+        this.addWindowListener((WindowListener) controller);  
+        // Hide Panels
+        this.jPanelSequence.setVisible(false);
+        this.jPanelDetection.setVisible(false);
+        this.jPanelExport.setVisible(false);
+       
     }
 
     
@@ -307,38 +442,46 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             model.getImage().getWindow().setIconImage(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-logo.png")).getImage());
             model.getImage().getWindow().setBackground(new Color(240, 240, 240));
             // change mouselistener of image window
-            model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
+            if(model.getImage().getCanvas().getMouseListeners().length > 0){
+               model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
+            }
+            // activate panel
+            this.jPanelSequence.setVisible(true);
             // update info
-            this.jLabel6.setText(model.getImageInfoString());
+            this.jLabelSequenceInfo.setText(model.getImageInfoString());
             // update buttons
-            this.jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
-            this.jButton2.setEnabled(true);
+            this.jButtonImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
+            this.jButtonDetection.setEnabled(true);
             
         }else if(model.getStatus() == LifeScienceModel.STATUS_CELLSDETECTED){
+            // set roi color
+            model.getImage().getRoi().setStrokeColor(new Color(0, 166, 151));
             // update buttons
-            this.jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
-            this.jButton3.setEnabled(true);
-            this.jLabel8.setText("Detection:");
-            this.jLabel9.setText(model.getDetectionInfoString());
+            this.jButtonDetection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
+            this.jButtonExport.setEnabled(true);
+            // update info
+            this.jLabelDetectionInfo.setText(model.getDetectionInfoString());
+            // activate panel
+            this.jPanelDetection.setVisible(true);
             
         }else if(model.getStatus() == LifeScienceModel.STATUS_EXPORTED){
             // update buttons
-            this.jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
+            this.jButtonExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
         }
         
         // update next and prev button
         int slice = model.getImage().getSlice();
         int size = model.getImage().getStackSize();
-        this.jButton4.setEnabled(true);
-        this.jButton5.setEnabled(true);
+        this.jButtonSequencePrev.setEnabled(true);
+        this.jButtonSequenceNext.setEnabled(true);
         if(slice <= 1){
-            this.jButton5.setEnabled(false);
+            this.jButtonSequencePrev.setEnabled(false);
         }
         if (slice >= size){
-            this.jButton4.setEnabled(false);
+            this.jButtonSequenceNext.setEnabled(false);
         }
         // update frame info
-        this.jLabel4.setText("Frame " + slice + " of " + size);        
+        this.jLabelSequenceFrame.setText("Frame " + slice + " of " + size);        
         
         this.repaint();
     }
