@@ -2,8 +2,10 @@ package de.lmu.dbs.lifescience.model;
 
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
+import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
+import ij.gui.Roi;
 import ij.measure.ResultsTable;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.filter.Analyzer;
@@ -11,6 +13,8 @@ import ij.plugin.filter.MaximumFinder;
 import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.Observable;
 
@@ -57,6 +61,11 @@ public class LifeScienceModel extends Observable{
      * Status of tool chain (represented by constants)
      */
     private int status;
+    
+    /**
+     * Table to show results
+     */
+    private Analyzer table;
     
     
     
@@ -189,8 +198,12 @@ public class LifeScienceModel extends Observable{
      */
     public void exportCSV(String path) throws IOException{
         //ResultsTable table = ResultsTable.getResultsTable();
-        Analyzer analyze = new Analyzer(this.image);
-        analyze.measure();
+        if(this.table != null){
+            this.table.measure();
+        }else{
+            this.table = new Analyzer(this.image);
+            this.table.measure();
+        }
         Analyzer.getResultsTable().saveAs(path);
         
         // set status and notifyobservers
@@ -202,6 +215,10 @@ public class LifeScienceModel extends Observable{
     
     public ImageCanvas getCanvas(){
         return this.image.getCanvas();
+    }
+    
+    public PointRoi getNuclei(){
+        return this.nuclei;
     }
     
     public ImagePlus getImage(){
@@ -246,6 +263,33 @@ public class LifeScienceModel extends Observable{
         return false;
     }
     
+    /**
+     * Shows Labels of Nuclei or not
+     * @param show 
+     */
+    public void showLabels(boolean show){
+        this.nuclei.setHideLabels(!show);
+        this.image.updateAndDraw();
+    }
+    
+    
+    /**
+     * Shows Tabel with all nuclei
+     * @param show 
+     */
+    public void showTable(boolean show){
+        if(this.table != null){
+            this.table.measure();
+            Analyzer.getResultsTable().show("Detected Nuclei");
+        }else{
+            this.table = new Analyzer(this.image);
+            this.table.measure();
+            Analyzer.getResultsTable().show("Detected Nuclei");
+        }
+        
+        
+    }
+    
     
     /**
      * Returns the current status in tool chain
@@ -253,6 +297,49 @@ public class LifeScienceModel extends Observable{
      */
     public int getStatus(){
         return this.status;
+    }
+
+    /**
+     * Edit Nuclei selection
+     * @param point 
+     */
+    public void editNuclei(Point point) {
+        
+
+        double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
+        
+        int i = this.nuclei.isHandle(point.x, point.y);
+        System.out.println(i);
+        if( i != (-1)){
+             //this.nuclei.deleteHandle(oxd, oyd);
+             int newSize = this.nuclei.getNCoordinates()-1;
+             int[] newX = new int[newSize];
+             int[] newY = new int[newSize];
+             
+             for(int j = 0; j<= newSize; j++){
+                 if(i > j){
+                    newX[j] = this.nuclei.getXCoordinates()[j];
+                    newY[j] = this.nuclei.getYCoordinates()[j];
+                 }else if(i < j){
+                    newX[j-1] = this.nuclei.getXCoordinates()[j];
+                    newY[j-1] = this.nuclei.getYCoordinates()[j];
+                 }
+             }
+             PointRoi newroi = new PointRoi(newX, newY, newSize);
+             newroi.setLocation(this.nuclei.getBounds().x, this.nuclei.getBounds().y);
+             this.nuclei = newroi;
+             
+             //this.nuclei.subtractPoints(new Roi(new Rectangle(200, 200, 500, 200)));
+             //this.nuclei.update(false, true);
+        }else{
+            this.nuclei = this.nuclei.addPoint(oxd, oyd);
+            
+        }
+        
+        this.image.setRoi(this.nuclei);
+        this.image.updateAndDraw();
+        this.setChanged();
+        this.notifyObservers();
     }
     
 }

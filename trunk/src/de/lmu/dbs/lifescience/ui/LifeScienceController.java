@@ -19,6 +19,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JToggleButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 
@@ -29,6 +30,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * @author bea
  */
 public class LifeScienceController implements ActionListener, MouseListener, WindowListener {
+    
+    
+    //---------------- Constants
+    
+    /** Edit Mode */
+    public static int MODE_EDIT = 1;
     
     
     //---------------- Attributes
@@ -42,6 +49,9 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     
     /** ImageJ */
     private IJ imagej;
+    
+    /** Modes */
+    private int mode;
     
     
     //---------------- Controller
@@ -81,6 +91,11 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 break;
             case "Detect Cells":
                 this.model.detectCells();
+                // change mouselistener of image window
+                if(model.getImage().getCanvas().getMouseListeners().length > 0){
+                    model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
+                    model.getImage().getCanvas().addMouseListener(this);
+                }
                 break;
             case "Export CSV":
                 // Open FileDialog...
@@ -98,16 +113,40 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     }
                 }
                 break;
+            case "Show Image":
+                {
+                    this.model.getImage().getWindow().setVisible(true);
+                    break;
+                }
             case "Next Frame":
                 {
-                    JButton btn = (JButton) e.getSource();
                     this.model.nextFrame();
                     break;
                 }
             case "Previous Frame":
                 {
-                    JButton btn = (JButton) e.getSource();
                     this.model.previousFrame();
+                    break;
+                }
+            case "Show Labels":
+                {
+                    JToggleButton btn = (JToggleButton) e.getSource();
+                    this.model.showLabels(btn.isSelected());
+                    break;
+                }
+            case "Show Table":
+                {
+                    this.model.showTable(true);
+                    break;
+                }
+            case "Edit Nuclei":
+                {
+                    JToggleButton btn = (JToggleButton) e.getSource();
+                    if(btn.isSelected()){
+                        this.mode = LifeScienceController.MODE_EDIT;
+                    }else{
+                        this.mode = 0;
+                    }
                     break;
                 }
         }
@@ -116,7 +155,10 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        // if edit mode, edit nuclei
+        if(this.mode == LifeScienceController.MODE_EDIT){
+            model.editNuclei(e.getPoint());
+        }
     }
 
     @Override
