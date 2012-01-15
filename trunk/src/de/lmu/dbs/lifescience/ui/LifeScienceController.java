@@ -86,6 +86,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 int action = openDialog.showOpenDialog(view);
                 if(action == JFileChooser.APPROVE_OPTION){
                     this.model.setImage(IJ.openImage(openDialog.getSelectedFile().getPath()));
+                    this.model.getImage().getWindow().addWindowListener(this);
                 }
                 break;
             case "Detect Cells":
@@ -114,7 +115,12 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 break;
             case "Show Image":
                 {
-                    this.model.getImage().getWindow().setVisible(true);
+                    JToggleButton btn = (JToggleButton) e.getSource();
+                    if(!btn.isSelected() && this.model.getImage() != null && this.model.getImage().getWindow() != null){
+                        this.model.getImage().getWindow().setVisible(false);
+                    }else{
+                        this.model.getImage().getWindow().setVisible(true);
+                    }
                     break;
                 }
             case "Next Frame":
@@ -187,7 +193,9 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowClosing(WindowEvent e) {
-        LOG.log(Level.FINEST, "Window closing - no action implementet yet.");
+        if(this.model.getImage()!= null && e.getSource().equals(this.model.getImage().getWindow())){
+            this.view.update(this.model, e);
+        }
     }
 
     @Override
