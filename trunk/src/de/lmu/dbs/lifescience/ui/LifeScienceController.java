@@ -16,8 +16,8 @@ import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JToggleButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -35,23 +35,25 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     //---------------- Constants
     
     /** Edit Mode */
-    public static int MODE_EDIT = 1;
+    public static enum Mode {
+        EDIT, VIEW
+    }
     
     
     //---------------- Attributes
-    private static final Logger log = Logger.getLogger("LifeScience Log");
-    
-    /** Model representing the data structure */
-    private LifeScienceModel model;
-    
-    /** View that for user interaction */
-    private LifeScienceView view;
+    private static final Logger LOG = Logger.getLogger("LifeScience Log");
     
     /** ImageJ */
-    private IJ imagej;
+    private final IJ imagej = new IJ();
+    
+    /** Model representing the data structure */
+    private final LifeScienceModel model;
+    
+    /** View that for user interaction */
+    private final LifeScienceView view;
     
     /** Modes */
-    private int mode;
+    private Mode mode;
     
     
     //---------------- Controller
@@ -62,11 +64,8 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
         // add Observers to model
         this.model.addObserver(view);
         
-        // create ImageJ instance
-        this.imagej = new IJ();
-        
         // configurate Logger
-        log.addHandler(new ConsoleHandler());
+        LOG.addHandler(new ConsoleHandler());
         
         // add Listeners to the view
         this.view.initController(this);
@@ -143,9 +142,9 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 {
                     JToggleButton btn = (JToggleButton) e.getSource();
                     if(btn.isSelected()){
-                        this.mode = LifeScienceController.MODE_EDIT;
+                        this.mode = LifeScienceController.Mode.EDIT;
                     }else{
-                        this.mode = 0;
+                        this.mode = LifeScienceController.Mode.VIEW;
                     }
                     break;
                 }
@@ -156,44 +155,44 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     @Override
     public void mouseClicked(MouseEvent e) {
         // if edit mode, edit nuclei
-        if(this.mode == LifeScienceController.MODE_EDIT){
+        if(this.mode == LifeScienceController.Mode.EDIT){
             model.editNuclei(e.getPoint());
         }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Mouse pressed - no action implementet yet.");
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Mouse released - no action implementet yet.");
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Mouse entered - no action implementet yet.");
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Mouse exited - no action implementet yet.");
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Window obened - no action implementet yet.");
     }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Window closing - no action implementet yet.");
     }
 
     @Override
     public void windowClosed(WindowEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Window closed - no action implementet yet.");
     }
 
     @Override
@@ -212,12 +211,12 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowActivated(WindowEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Window activated - no action implementet yet.");
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        //throw new UnsupportedOperationException("Not supported yet.");
+        LOG.log(Level.FINEST, "Window deactivated - no action implementet yet.");
     }
 
     

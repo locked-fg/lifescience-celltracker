@@ -1,17 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /*
  * LifeScienceGUI.java
- *
+ * GUI of LifeScience CellTracker
+ * 
  * Created on 18.11.2011, 23:19:40
  */
 package de.lmu.dbs.lifescience.ui;
 
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
-import ij.ImagePlus;
 import java.awt.Color;
 import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
@@ -461,7 +457,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer, Act
         LifeScienceModel model = (LifeScienceModel) o;
         
         // set view like model status
-        if(model.getStatus() == LifeScienceModel.STATUS_IMAGEREADY){
+        if(model.getStatus() == LifeScienceModel.Status.IMAGEREADY){
             // locate imgage window on right screen side and resize accordingly
             int windowwidth =(int) Toolkit.getDefaultToolkit().getScreenSize().getWidth();
             model.getImage().getWindow().setLocation(this.getWidth(), 0);
@@ -478,7 +474,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer, Act
             this.jButtonImport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
             this.jButtonDetection.setEnabled(true);
             
-        }else if(model.getStatus() == LifeScienceModel.STATUS_CELLSDETECTED){
+        }else if(model.getStatus() == LifeScienceModel.Status.CELLSDETECTED){
             // set roi color
             model.getImage().getRoi().setStrokeColor(new Color(0, 166, 151));
             // update buttons
@@ -489,7 +485,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer, Act
             // activate panel
             this.jPanelDetection.setVisible(true);
             
-        }else if(model.getStatus() == LifeScienceModel.STATUS_EXPORTED){
+        }else if(model.getStatus() == LifeScienceModel.Status.EXPORTED){
             // update buttons
             this.jButtonExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
         }

@@ -25,19 +25,10 @@ import java.util.Observable;
 public class LifeScienceModel extends Observable{
 
     //---------------- Constants
-    
-    /** Status: lauch of program */
-    public static int STATUS_START = 0;
-    
-    /** Status: TIFF sequence importet */
-    public static int STATUS_IMAGEREADY = 1;
-    
-    /** Status: Cells detected */
-    public static int STATUS_CELLSDETECTED = 2;
-    
-    /** Status Data export ready */
-    public static int STATUS_EXPORTED = 10;
-    
+    /** Image status */
+    public static enum Status {
+        START, IMAGEREADY, CELLSDETECTED, EXPORTED
+    }
     
     
     //---------------- Attributes
@@ -60,7 +51,7 @@ public class LifeScienceModel extends Observable{
     /**
      * Status of tool chain (represented by constants)
      */
-    private int status;
+    private Status status;
     
     /**
      * Table to show results
@@ -76,7 +67,7 @@ public class LifeScienceModel extends Observable{
      */
     public LifeScienceModel() {
         // set status
-        this.status = LifeScienceModel.STATUS_START;
+        this.status = LifeScienceModel.Status.START;
         
     }
     
@@ -95,7 +86,7 @@ public class LifeScienceModel extends Observable{
         }
         this.image = image;
         showImage();
-        this.status = LifeScienceModel.STATUS_IMAGEREADY;
+        this.status = LifeScienceModel.Status.IMAGEREADY;
         this.setChanged();
         this.notifyObservers();
     }
@@ -185,7 +176,7 @@ public class LifeScienceModel extends Observable{
         this.image.updateAndDraw();
         
         // set status and notifyobservers
-        this.status = LifeScienceModel.STATUS_CELLSDETECTED;
+        this.status = LifeScienceModel.Status.CELLSDETECTED;
         this.setChanged();
         this.notifyObservers();
     }
@@ -207,7 +198,7 @@ public class LifeScienceModel extends Observable{
         Analyzer.getResultsTable().saveAs(path);
         
         // set status and notifyobservers
-        this.status = LifeScienceModel.STATUS_EXPORTED;
+        this.status = LifeScienceModel.Status.EXPORTED;
         this.setChanged();
         this.notifyObservers();
     }
@@ -295,7 +286,7 @@ public class LifeScienceModel extends Observable{
      * Returns the current status in tool chain
      * @return status of the model
      */
-    public int getStatus(){
+    public Status getStatus(){
         return this.status;
     }
 
@@ -309,7 +300,6 @@ public class LifeScienceModel extends Observable{
         double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
         
         int i = this.nuclei.isHandle(point.x, point.y);
-        System.out.println(i);
         if( i != (-1)){
              //this.nuclei.deleteHandle(oxd, oyd);
              int newSize = this.nuclei.getNCoordinates()-1;

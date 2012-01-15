@@ -11,7 +11,7 @@ import de.lmu.dbs.lifescience.ui.LifeScienceView;
 
 
 /**
- *
+ * Main class
  * @author bea
  */
 public class LifeScience {
