@@ -1,12 +1,11 @@
 package de.lmu.dbs.lifescience.model;
 
+import de.lmu.dbs.lifescience.LifeScience;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
-import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
-import ij.gui.Roi;
-import ij.measure.ResultsTable;
+import ij.measure.Calibration;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.filter.MaximumFinder;
@@ -14,7 +13,6 @@ import ij.plugin.filter.RankFilters;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.Observable;
 
@@ -108,6 +106,7 @@ public class LifeScienceModel extends Observable{
      * @return String html with info
      */
     public String getImageInfoString(){
+        Calibration cal = this.image.getCalibration();
         String info = "<html>";
         // get type
         String type = "";
@@ -129,7 +128,8 @@ public class LifeScienceModel extends Observable{
                 break;
         }        
         info += type + "<br><br>";
-        info += "Dimensions " + this.getImage().getWidth() + " x " + this.getImage().getHeight() + "<br><br>";
+        info += "Dimensions <br>" + this.getImage().getWidth() + " x " + this.getImage().getHeight() + " px <br>" +  
+                                 Math.round(cal.pixelDepth*this.image.getWidth()*100)/100.0 + " x " + Math.round(cal.pixelDepth*this.image.getHeight()*100)/100.0 + " " + cal.getUnit();
         info += "</html>";
         return info;
     }

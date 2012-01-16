@@ -174,9 +174,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer, Act
             .addGroup(jPanelSequenceLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelSequenceLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelSequenceLayout.createSequentialGroup()
-                        .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-                        .addGap(30, 30, 30))
+                    .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                     .addGroup(jPanelSequenceLayout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
                         .addGap(56, 56, 56)
@@ -205,8 +203,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer, Act
                             .addComponent(jButtonSequencePrev)
                             .addComponent(jButtonSequenceNext))))
                 .addGap(11, 11, 11)
-                .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jLabel11.setForeground(new java.awt.Color(153, 153, 153));
@@ -352,14 +350,14 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer, Act
     // Code for dispatching events from components to event handlers.
 
     public void actionPerformed(java.awt.event.ActionEvent evt) {
-        if (evt.getSource() == jToggleButtonDetectionLabels) {
+        if (evt.getSource() == jToggleButtonSequenceWindow) {
+            LifeScienceView.this.jToggleButtonSequenceWindowActionPerformed(evt);
+        }
+        else if (evt.getSource() == jToggleButtonDetectionLabels) {
             LifeScienceView.this.jToggleButtonDetectionLabelsActionPerformed(evt);
         }
         else if (evt.getSource() == jToggleButtonDetectionEdit) {
             LifeScienceView.this.jToggleButtonDetectionEditActionPerformed(evt);
-        }
-        else if (evt.getSource() == jToggleButtonSequenceWindow) {
-            LifeScienceView.this.jToggleButtonSequenceWindowActionPerformed(evt);
         }
     }// </editor-fold>//GEN-END:initComponents
 

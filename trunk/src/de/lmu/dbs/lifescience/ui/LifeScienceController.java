@@ -4,20 +4,23 @@
  */
 package de.lmu.dbs.lifescience.ui;
 
+import de.lmu.dbs.lifescience.LifeScience;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import ij.IJ;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JToggleButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -29,8 +32,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  * 
  * @author bea
  */
-public class LifeScienceController implements ActionListener, MouseListener, WindowListener {
-    
+public class LifeScienceController implements ActionListener, MouseListener, WindowListener, AdjustmentListener {
+
+  
+  
     
     //---------------- Constants
     
@@ -41,7 +46,6 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     
     
     //---------------- Attributes
-    private static final Logger LOG = Logger.getLogger("LifeScience Log");
     
     /** ImageJ */
     private final IJ imagej = new IJ();
@@ -64,9 +68,6 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
         // add Observers to model
         this.model.addObserver(view);
         
-        // configurate Logger
-        LOG.addHandler(new ConsoleHandler());
-        
         // add Listeners to the view
         this.view.initController(this);
     }
@@ -86,7 +87,11 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 int action = openDialog.showOpenDialog(view);
                 if(action == JFileChooser.APPROVE_OPTION){
                     this.model.setImage(IJ.openImage(openDialog.getSelectedFile().getPath()));
+                    // add Window listener to dock windows
                     this.model.getImage().getWindow().addWindowListener(this);
+                    // add Listener to scrollbar
+                    ij.gui.ScrollbarWithLabel scroll = (ij.gui.ScrollbarWithLabel) this.model.getImage().getWindow().getComponent(1);
+                    scroll.addAdjustmentListener(this);
                 }
                 break;
             case "Detect Cells":
@@ -109,7 +114,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     try {
                         this.model.exportCSV(saveDialog.getSelectedFile().getPath().toString());
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        LifeScience.LOG.log(Level.WARNING, "CSV export failed: " + ex.getStackTrace().toString());
                     }
                 }
                 break;
@@ -168,27 +173,27 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void mousePressed(MouseEvent e) {
-        LOG.log(Level.FINEST, "Mouse pressed - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Mouse pressed - no action implementet yet.");
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        LOG.log(Level.FINEST, "Mouse released - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Mouse released - no action implementet yet.");
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        LOG.log(Level.FINEST, "Mouse entered - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Mouse entered - no action implementet yet.");
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        LOG.log(Level.FINEST, "Mouse exited - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Mouse exited - no action implementet yet.");
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
-        LOG.log(Level.FINEST, "Window obened - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Window obened - no action implementet yet.");
     }
 
     @Override
@@ -200,7 +205,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowClosed(WindowEvent e) {
-        LOG.log(Level.FINEST, "Window closed - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Window closed - no action implementet yet.");
     }
 
     @Override
@@ -219,13 +224,20 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowActivated(WindowEvent e) {
-        LOG.log(Level.FINEST, "Window activated - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Window activated - no action implementet yet.");
     }
 
     @Override
     public void windowDeactivated(WindowEvent e) {
-        LOG.log(Level.FINEST, "Window deactivated - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Window deactivated - no action implementet yet.");
     }
+    
+     @Override
+    public void adjustmentValueChanged(AdjustmentEvent e) {
+        this.view.update(model, e);
+    }
+
+    
 
     
     
