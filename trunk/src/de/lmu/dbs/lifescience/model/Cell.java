@@ -42,7 +42,7 @@ public class Cell {
     
     /**
      * Creates a new cell with one nucleus
-     * @param nuclei Array of nuclei
+     * @param nucleus Array of nuclei
      */
     public Cell(Nucleus nucleus){
         this.addNucleus(nucleus);

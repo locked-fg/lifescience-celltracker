@@ -4,7 +4,6 @@ import ij.IJ;
 import ij.gui.ImageCanvas;
 import ij.ImagePlus;
 import ij.gui.Overlay;
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.Serializable;
 
@@ -35,7 +34,7 @@ public class LifeScienceImageCanvas extends ImageCanvas implements Serializable{
     
     /**
      * Constructs a new ImageCanvas with given image
-     * @param path to Image 
+     * @param img ImagePlus image 
      */
     public LifeScienceImageCanvas(ImagePlus img) {
         super(img);

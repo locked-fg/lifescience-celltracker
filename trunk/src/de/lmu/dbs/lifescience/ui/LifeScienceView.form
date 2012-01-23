@@ -26,23 +26,30 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel1" min="-2" pref="160" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jPanel2" pref="200" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="lifeScienceProgressBar" alignment="0" pref="408" max="32767" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="jPanel1" pref="184" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jPanel2" min="-2" pref="218" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jPanel1" alignment="0" pref="719" max="32767" attributes="0"/>
-                  <Component id="jPanel2" alignment="0" pref="719" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jPanel1" pref="695" max="32767" attributes="1"/>
+                  <Component id="jPanel2" alignment="0" pref="695" max="32767" attributes="1"/>
               </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="lifeScienceProgressBar" min="-2" pref="15" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -81,11 +88,15 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButtonImport" alignment="0" pref="130" max="32767" attributes="1"/>
-                      <Component id="jLabel2" alignment="0" pref="130" max="32767" attributes="0"/>
-                      <Component id="jButtonDetection" alignment="0" pref="130" max="32767" attributes="1"/>
-                      <Component id="jLabel3" alignment="0" pref="130" max="32767" attributes="0"/>
-                      <Component id="jButtonExport" alignment="0" pref="130" max="32767" attributes="1"/>
+                      <Component id="jButtonImport" alignment="0" pref="154" max="32767" attributes="1"/>
+                      <Component id="jLabel2" alignment="0" pref="154" max="32767" attributes="0"/>
+                      <Component id="jButtonEnhancement" alignment="0" pref="154" max="32767" attributes="1"/>
+                      <Component id="jLabel5" alignment="0" pref="154" max="32767" attributes="0"/>
+                      <Component id="jButtonDetection" alignment="0" pref="154" max="32767" attributes="1"/>
+                      <Component id="jLabel4" alignment="0" pref="154" max="32767" attributes="0"/>
+                      <Component id="jButtonTracking" alignment="0" pref="154" max="32767" attributes="1"/>
+                      <Component id="jLabel3" alignment="0" pref="154" max="32767" attributes="0"/>
+                      <Component id="jButtonExport" alignment="0" pref="154" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -94,17 +105,25 @@
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="jButtonImport" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButtonEnhancement" min="-2" pref="34" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonDetection" min="-2" pref="34" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButtonTracking" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonExport" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace pref="516" max="32767" attributes="0"/>
+                  <EmptySpace pref="364" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -176,6 +195,60 @@
             </Property>
           </Properties>
         </Component>
+        <Component class="javax.swing.JButton" name="jButtonTracking">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="a7" green="5a" red="21" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-track.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Track Cells"/>
+            <Property name="toolTipText" type="java.lang.String" value="Track nuclei throughout sequence..."/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[83, 23]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[83, 23]"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel4">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-spacer.png"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonEnhancement">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="a7" green="5a" red="21" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-enhance.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Enhance Images"/>
+            <Property name="toolTipText" type="java.lang.String" value="Enhance Quality of Image Sequence"/>
+            <Property name="enabled" type="boolean" value="false"/>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[83, 23]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[83, 23]"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel5">
+          <Properties>
+            <Property name="horizontalAlignment" type="int" value="0"/>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-spacer.png"/>
+            </Property>
+          </Properties>
+        </Component>
       </SubComponents>
     </Container>
     <Container class="javax.swing.JPanel" name="jPanel2">
@@ -205,7 +278,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jPanelSequence" alignment="0" max="32767" attributes="0"/>
-              <Component id="jPanelDetection" alignment="1" max="32767" attributes="0"/>
+              <Component id="jPanelDetection" alignment="0" max="32767" attributes="0"/>
               <Component id="jPanelExport" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
@@ -214,11 +287,11 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanelSequence" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jPanelDetection" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jPanelDetection" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanelExport" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="227" max="32767" attributes="0"/>
+                  <EmptySpace pref="203" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -232,18 +305,25 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabelSequenceInfo" alignment="0" pref="170" max="32767" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel10" pref="88" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
-                              <Component id="jToggleButtonSequenceWindow" min="-2" pref="26" max="-2" attributes="1"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabelSequenceFrame" pref="102" max="32767" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="jButtonSequencePrev" min="-2" pref="26" max="-2" attributes="0"/>
+                          <Component id="jLabelSequenceInfo" alignment="0" pref="188" max="32767" attributes="0"/>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel10" pref="106" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                                      <Component id="jToggleButtonSequenceWindow" min="-2" pref="26" max="-2" attributes="1"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="jLabelSequenceFrame" pref="120" max="32767" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="jButtonSequencePrev" min="-2" pref="26" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jButtonSequenceNext" min="-2" pref="26" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="jButtonSequenceNext" min="-2" pref="26" max="-2" attributes="0"/>
+                                  <Component id="jToggleButtonSequenceImageJ" alignment="1" min="-2" pref="26" max="-2" attributes="1"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -261,7 +341,10 @@
                               <Component id="jLabelSequenceFrame" min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
-                              <Component id="jToggleButtonSequenceWindow" min="-2" max="-2" attributes="1"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jToggleButtonSequenceWindow" min="-2" max="-2" attributes="1"/>
+                                  <Component id="jToggleButtonSequenceImageJ" min="-2" max="-2" attributes="1"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jButtonSequencePrev" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -289,6 +372,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelSequenceFrame">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial" size="12" style="0"/>
+                </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="6b" green="61" red="59" type="rgb"/>
                 </Property>
@@ -318,6 +404,9 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelSequenceInfo">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial" size="12" style="0"/>
+                </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="6b" green="61" red="59" type="rgb"/>
                 </Property>
@@ -329,17 +418,23 @@
             <Component class="javax.swing.JToggleButton" name="jToggleButtonSequenceWindow">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-window.gif"/>
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-window.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Show image window"/>
                 <Property name="actionCommand" type="java.lang.String" value="Show Image"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonSequenceWindowActionPerformed"/>
-              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonSequenceWindow.setSelected(true);"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JToggleButton" name="jToggleButtonSequenceImageJ">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-imagej.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Open ImageJ"/>
+                <Property name="actionCommand" type="java.lang.String" value="Open ImageJ"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
@@ -353,11 +448,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Component id="jLabel11" min="-2" pref="68" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                              <EmptySpace pref="94" max="32767" attributes="0"/>
                               <Component id="jButtonDetectionTable" min="-2" pref="26" max="-2" attributes="1"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="1">
-                              <Component id="jLabelDetectionInfo" pref="108" max="32767" attributes="0"/>
+                              <Component id="jLabelDetectionInfo" pref="126" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jToggleButtonDetectionLabels" min="-2" pref="26" max="-2" attributes="1"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -373,8 +468,8 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jButtonDetectionTable" max="32767" attributes="1"/>
                           <Component id="jLabel11" min="-2" pref="19" max="-2" attributes="0"/>
+                          <Component id="jButtonDetectionTable" max="32767" attributes="1"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -404,20 +499,20 @@
             <Component class="javax.swing.JToggleButton" name="jToggleButtonDetectionLabels">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-label.gif"/>
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-label.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Show labels of nuclei."/>
                 <Property name="actionCommand" type="java.lang.String" value="Show Labels"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonDetectionLabelsActionPerformed"/>
-              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonDetectionLabels.setSelected(true);"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabelDetectionInfo">
               <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Arial" size="12" style="0"/>
+                </Property>
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="6b" green="61" red="59" type="rgb"/>
                 </Property>
@@ -443,9 +538,6 @@
                 <Property name="toolTipText" type="java.lang.String" value="Edit detected nuclei."/>
                 <Property name="actionCommand" type="java.lang.String" value="Edit Nuclei"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jToggleButtonDetectionEditActionPerformed"/>
-              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonDetectionLabels.setSelected(true);"/>
               </AuxValues>
@@ -461,11 +553,11 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabelExportInfo" pref="170" max="32767" attributes="0"/>
+                              <Component id="jLabelExportInfo" pref="188" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel12" pref="88" max="32767" attributes="0"/>
+                              <Component id="jLabel12" pref="106" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="92" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -509,5 +601,7 @@
         </Container>
       </SubComponents>
     </Container>
+    <Component class="de.lmu.dbs.lifescience.ui.LifeScienceProgressBar" name="lifeScienceProgressBar">
+    </Component>
   </SubComponents>
 </Form>

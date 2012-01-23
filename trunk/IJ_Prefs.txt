@@ -1,0 +1,36 @@
+#ImageJ 1.46a Preferences
+#Sun Jan 22 23:31:28 CET 2012
+.threshold.loc=654,158
+.threshold.dark=true
+menu.size=14
+fps=7.0
+new.type=0
+dir.image=C\:\\Users\\bea\\Desktop\\
+new.width=400
+fcolor=\#000000
+div-by-zero=Infinity
+pp.options=1
+prefs.options2=2
+raw.type=0
+ij.y=0
+roicolor=\#FFFF00
+ij.x=0
+.threshold.mode=0
+noise.sd=25.0
+prefs.options=541085712
+new.slices=1
+raw.width=512
+new.height=400
+new.fill=0
+bcolor=\#FFFFFF
+ap.options=64
+measurements=19
+precision=3
+mark.width=0
+raw.gap=0
+raw.height=512
+raw.options=0
+showcolor=\#00FFFF
+raw.n=1
+jpeg=85
+raw.offset=0

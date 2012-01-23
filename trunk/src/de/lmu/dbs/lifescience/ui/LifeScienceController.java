@@ -6,14 +6,15 @@ package de.lmu.dbs.lifescience.ui;
 
 import de.lmu.dbs.lifescience.LifeScience;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
+import de.lmu.dbs.lifescience.processing.CellDetector;
+import de.lmu.dbs.lifescience.processing.CellTracker;
+import de.lmu.dbs.lifescience.processing.ImageEnhancer;
 import ij.IJ;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
@@ -92,15 +93,28 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     // add Listener to scrollbar
                     ij.gui.ScrollbarWithLabel scroll = (ij.gui.ScrollbarWithLabel) this.model.getImage().getWindow().getComponent(1);
                     scroll.addAdjustmentListener(this);
+                    this.model.setStatus(LifeScienceModel.Status.IMAGEREADY);
                 }
                 break;
+            case "Enhance Images":
+                ImageEnhancer enhancer = new ImageEnhancer(model.getImage(), true);
+                enhancer.run();
+                this.model.setStatus(LifeScienceModel.Status.IMAGEENHANCED);
+                break;
             case "Detect Cells":
-                this.model.detectCells();
+                CellDetector detector = new CellDetector(model.getImage(), this.model);
+                detector.run();
                 // change mouselistener of image window
                 if(model.getImage().getCanvas().getMouseListeners().length > 0){
                     model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
                     model.getImage().getCanvas().addMouseListener(this);
                 }
+                this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
+                break;
+            case "Track Cells":
+                CellTracker tracker = new CellTracker(model.getImage());
+                tracker.run();
+                this.model.setStatus(LifeScienceModel.Status.CELLSTRACKED);
                 break;
             case "Export CSV":
                 // Open FileDialog...
@@ -113,11 +127,24 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 if(option == JFileChooser.APPROVE_OPTION){
                     try {
                         this.model.exportCSV(saveDialog.getSelectedFile().getPath().toString());
+                        this.model.setStatus(LifeScienceModel.Status.EXPORTED);
                     } catch (IOException ex) {
-                        LifeScience.LOG.log(Level.WARNING, "CSV export failed: " + ex.getStackTrace().toString());
+                        LifeScience.LOG.log(Level.WARNING, "CSV export failed: {0}", ex.getStackTrace().toString());
                     }
                 }
                 break;
+            case "Open ImageJ":
+                {
+                    JToggleButton btn = (JToggleButton) e.getSource();
+                    if(btn.isSelected()){
+                        this.view.showImageJ(true);
+                        btn.setSelected(true);
+                    }else{
+                        this.view.showImageJ(false);
+                        btn.setSelected(false);
+                    }
+                    break;
+                }
             case "Show Image":
                 {
                     JToggleButton btn = (JToggleButton) e.getSource();
@@ -198,7 +225,11 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowClosing(WindowEvent e) {
+        // Group and link windows
         if(this.model.getImage()!= null && e.getSource().equals(this.model.getImage().getWindow())){
+            this.view.update(this.model, e);
+        }else if("ij.ImageJ".equals(e.getSource().getClass().getName())){
+            this.view.showImageJ(false);
             this.view.update(this.model, e);
         }
     }
@@ -210,15 +241,19 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowIconified(WindowEvent e) {
-        if(this.model.getImage() != null){
+        // Group and link windows
+        if(this.model.getImage()!= null && e.getSource().equals(this.view)){
             this.model.getImage().getWindow().setState(Frame.ICONIFIED);
+            this.view.getImageJ().setState(Frame.ICONIFIED);
         }
     }
 
     @Override
     public void windowDeiconified(WindowEvent e) {
-        if(this.model.getImage() != null){
+        // Group and link windows
+        if(this.model.getImage()!= null && e.getSource().equals(this.view)){
             this.model.getImage().getWindow().setState(Frame.NORMAL);
+            this.view.getImageJ().setState(Frame.NORMAL);
         }
     }
 

@@ -6,12 +6,8 @@ import ij.gui.ImageCanvas;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.measure.Calibration;
-import ij.plugin.ContrastEnhancer;
 import ij.plugin.filter.Analyzer;
-import ij.plugin.filter.MaximumFinder;
-import ij.plugin.filter.RankFilters;
-import ij.process.ByteProcessor;
-import ij.process.ImageProcessor;
+import ij.plugin.frame.RoiManager;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.Observable;
@@ -25,7 +21,7 @@ public class LifeScienceModel extends Observable{
     //---------------- Constants
     /** Image status */
     public static enum Status {
-        START, IMAGEREADY, CELLSDETECTED, EXPORTED
+        START, IMAGEREADY, IMAGEENHANCED, CELLSDETECTED, CELLSTRACKED, EXPORTED
     }
     
     
@@ -42,6 +38,11 @@ public class LifeScienceModel extends Observable{
     private PointRoi nuclei;
     
     /**
+     * Detected cells
+     */
+    private RoiManager cells;
+    
+    /**
      * Overlay on which additional Info is displayed (upon image)
      */
     private Overlay overlay;
@@ -56,6 +57,8 @@ public class LifeScienceModel extends Observable{
      */
     private Analyzer table;
     
+
+    
     
     
     //---------------- Constructor
@@ -65,6 +68,12 @@ public class LifeScienceModel extends Observable{
      */
     public LifeScienceModel() {
         // set status
+        this.status = LifeScienceModel.Status.START;
+        
+        // set cell collection
+        this.cells = new RoiManager(true);
+        
+        //set progress to 0 percent
         this.status = LifeScienceModel.Status.START;
         
     }
@@ -79,14 +88,11 @@ public class LifeScienceModel extends Observable{
      * @param image ImagePlus
      */
     public void setImage(ImagePlus image){
-        if(this.image != null){
+        if(this.image != null){ // reset all
             this.image.close();
         }
         this.image = image;
-        showImage();
-        this.status = LifeScienceModel.Status.IMAGEREADY;
-        this.setChanged();
-        this.notifyObservers();
+        showImage();        
     }
     
     /**
@@ -128,7 +134,7 @@ public class LifeScienceModel extends Observable{
                 break;
         }        
         info += type + "<br><br>";
-        info += "Dimensions <br>" + this.getImage().getWidth() + " x " + this.getImage().getHeight() + " px <br>" +  
+        info += this.getImage().getWidth() + " x " + this.getImage().getHeight() + " px <br>" +  
                                  Math.round(cal.pixelDepth*this.image.getWidth()*100)/100.0 + " x " + Math.round(cal.pixelDepth*this.image.getHeight()*100)/100.0 + " " + cal.getUnit();
         info += "</html>";
         return info;
@@ -148,38 +154,7 @@ public class LifeScienceModel extends Observable{
     }
     
     
-    /**
-     * Detects all Cells in images
-     */
-    public void detectCells(){
-        // get processor
-        ByteProcessor process = (ByteProcessor) this.image.getProcessor();
-       
-        // Reduce Noise
-        RankFilters filter = new RankFilters();
-        filter.rank(process, RankFilters.MEDIAN, 4);
-                
-        // Enhance Contrast
-        ContrastEnhancer contrast = new ContrastEnhancer();
-        contrast.stretchHistogram(process, 0.5);
-                
-        // Find Maxima
-        MaximumFinder maxfind = new MaximumFinder();
-        maxfind.setup(null, this.image);
-        maxfind.findMaxima(process, 10, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
-        
-        // Set Results
-        this.nuclei = (PointRoi) this.image.getRoi();
-        this.nuclei.setHideLabels(false);
-        
-        // update image
-        this.image.updateAndDraw();
-        
-        // set status and notifyobservers
-        this.status = LifeScienceModel.Status.CELLSDETECTED;
-        this.setChanged();
-        this.notifyObservers();
-    }
+    
     
     
     /**
@@ -199,8 +174,6 @@ public class LifeScienceModel extends Observable{
         
         // set status and notifyobservers
         this.status = LifeScienceModel.Status.EXPORTED;
-        this.setChanged();
-        this.notifyObservers();
     }
     
     
@@ -208,8 +181,20 @@ public class LifeScienceModel extends Observable{
         return this.image.getCanvas();
     }
     
+    /**
+     * Get Nuclei as PointROI
+     * @return Nuclei PointRoi
+     */
     public PointRoi getNuclei(){
         return this.nuclei;
+    }
+    
+    /**
+     * Set nuclei as PointRoi
+     * @param nuclei 
+     */
+    public void setNuclei(PointRoi nuclei){
+        this.nuclei = nuclei;
     }
     
     public ImagePlus getImage(){
@@ -271,14 +256,12 @@ public class LifeScienceModel extends Observable{
     public void showTable(boolean show){
         if(this.table != null){
             this.table.measure();
-            Analyzer.getResultsTable().show("Detected Nuclei");
+            Analyzer.getResultsTable().show("Results");
         }else{
             this.table = new Analyzer(this.image);
             this.table.measure();
-            Analyzer.getResultsTable().show("Detected Nuclei");
-        }
-        
-        
+            Analyzer.getResultsTable().show("Results");
+        }   
     }
     
     
@@ -289,7 +272,19 @@ public class LifeScienceModel extends Observable{
     public Status getStatus(){
         return this.status;
     }
+    
+    
+    /**
+     * Set Status and notify Observers
+     * @param status Enum
+     */
+    public void setStatus(Status status){
+        this.status = status;
+        this.setChanged();
+        this.notifyObservers();
+    }
 
+    
     /**
      * Edit Nuclei selection
      * @param point 
@@ -300,8 +295,8 @@ public class LifeScienceModel extends Observable{
         double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
         
         int i = this.nuclei.isHandle(point.x, point.y);
+        
         if( i != (-1)){
-             //this.nuclei.deleteHandle(oxd, oyd);
              int newSize = this.nuclei.getNCoordinates()-1;
              int[] newX = new int[newSize];
              int[] newY = new int[newSize];
@@ -316,14 +311,21 @@ public class LifeScienceModel extends Observable{
                  }
              }
              PointRoi newroi = new PointRoi(newX, newY, newSize);
-             newroi.setLocation(this.nuclei.getBounds().x, this.nuclei.getBounds().y);
-             this.nuclei = newroi;
+             // calculate offset
+             int xoffset = 0;
+             int yoffset = 0;
+             if(this.nuclei.getXCoordinates()[i] == 0){
+                 xoffset = this.nuclei.getBounds().width - newroi.getBounds().width;
+             }
+             if(this.nuclei.getYCoordinates()[i] == 0){
+                 yoffset = this.nuclei.getBounds().height - newroi.getBounds().height;
+             }
              
-             //this.nuclei.subtractPoints(new Roi(new Rectangle(200, 200, 500, 200)));
-             //this.nuclei.update(false, true);
+             newroi.setLocation(this.nuclei.getBounds().x+xoffset, this.nuclei.getBounds().y+yoffset);
+             this.nuclei = newroi; 
+             
         }else{
             this.nuclei = this.nuclei.addPoint(oxd, oyd);
-            
         }
         
         this.image.setRoi(this.nuclei);
