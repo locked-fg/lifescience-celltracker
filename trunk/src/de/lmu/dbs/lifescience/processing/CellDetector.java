@@ -1,7 +1,9 @@
 package de.lmu.dbs.lifescience.processing;
 
 import de.lmu.dbs.lifescience.LifeScience;
+import de.lmu.dbs.lifescience.model.Cell;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
+import de.lmu.dbs.lifescience.model.Nucleus;
 import ij.ImagePlus;
 import ij.gui.PointRoi;
 import ij.plugin.filter.MaximumFinder;
@@ -44,10 +46,18 @@ public class CellDetector extends Processor {
         maxfind.setup(null, this.image);
         maxfind.findMaxima(process, 10, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
 
-        // TODO Set Results ( changing to own Type) 
+        // Build data set
+        PointRoi points = (PointRoi) this.image.getRoi();
+        int[] xcoords = points.getXCoordinates();
+        int[] ycoords = points.getYCoordinates();
+        int xoff = points.getBounds().x;
+        int yoff = points.getBounds().y;
         
-        this.model.setNuclei((PointRoi) this.image.getRoi());
-        this.model.getNuclei().setHideLabels(false);
+        // Detect Cells in first Image
+        for(int i=0; i < xcoords.length; i++){
+            this.model.addCell(new Cell(new Nucleus(this.image.getImageStackSize(), xcoords[i]+xoff, ycoords[i]+yoff)));
+        }
+        this.image.killRoi();
                 
         // update image
         this.image.updateAndDraw();

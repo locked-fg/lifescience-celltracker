@@ -27,8 +27,12 @@ public class Cell {
     /** Frame number mitosis was complete  */
     private int timeMitosisEnd;
     
-    /** List of nuclei of this cell (normally just one, seldom two)  */
-    private ArrayList<Nucleus> nuclei;
+    /** Nuclei of this cell (normally just one, seldom two)  */
+    private Nucleus firstNucleus;
+    private Nucleus secondNucleus;
+    
+    /** True if cell has 4 chromosome sets (2 nuclei)   */
+    private boolean tetraploid;
     
     /** Parent cell of this cell */
     private Cell parent;
@@ -45,7 +49,8 @@ public class Cell {
      * @param nucleus Array of nuclei
      */
     public Cell(Nucleus nucleus){
-        this.addNucleus(nucleus);
+        this.firstNucleus = nucleus;
+        this.tetraploid = false;
     }
     
     
@@ -55,9 +60,42 @@ public class Cell {
     /**
      * Adds a nucleus to the cell
      * @param nucleus 
+     * @return true if adding of nucleus was successful, otherwise false
      */
-    public void addNucleus(Nucleus nucleus){
-        this.nuclei.add(nucleus);
+    public boolean addNucleus(Nucleus nucleus){
+        if(!this.tetraploid){
+            this.secondNucleus = nucleus;
+            this.tetraploid = true;
+            return true;
+        }
+        return false; 
+    }
+    
+    /**
+     * Determine wether cell is tetraploid (2 nuclei, 4 chromosome sets)
+     * @return true if cell is tetraploid
+     */
+    public boolean isTetraploid(){
+        return this.tetraploid;
+    }
+    
+    /**
+     * Return the first nucleus of this cell
+     * @return Nucleus
+     */
+    public Nucleus getFirstNucleus(){
+        return this.firstNucleus;
+    }
+    
+    /**
+     * Return second nucleus if cell is tetraploid
+     * @return Nucleus or null if cell is not tetraploid
+     */
+    public Nucleus getSecondNucleus(){
+        if(this.tetraploid){
+            return this.secondNucleus;
+        }
+        return null;
     }
     
 }

@@ -109,6 +109,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
                     model.getImage().getCanvas().addMouseListener(this);
                 }
+                this.model.setPoints();
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":

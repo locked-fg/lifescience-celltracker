@@ -10,6 +10,7 @@ import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
 import java.awt.Point;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 
 /**
@@ -35,12 +36,12 @@ public class LifeScienceModel extends Observable{
     /**
      * Detected nuclei
      */
-    private PointRoi nuclei;
+    private PointRoi pointroi;
     
     /**
      * Detected cells
      */
-    private RoiManager cells;
+    private RoiManager roimanager;
     
     /**
      * Overlay on which additional Info is displayed (upon image)
@@ -57,6 +58,10 @@ public class LifeScienceModel extends Observable{
      */
     private Analyzer table;
     
+    /**
+     * List of detected cells
+     */
+    private ArrayList<Cell> cells;
 
     
     
@@ -71,10 +76,13 @@ public class LifeScienceModel extends Observable{
         this.status = LifeScienceModel.Status.START;
         
         // set cell collection
-        this.cells = new RoiManager(true);
+        this.roimanager = new RoiManager(true);
         
         //set progress to 0 percent
         this.status = LifeScienceModel.Status.START;
+        
+        //set cell collection
+        this.cells = new ArrayList<>();
         
     }
     
@@ -148,7 +156,7 @@ public class LifeScienceModel extends Observable{
         String info = "<html>";
         // get type
         
-        info += this.nuclei.getNCoordinates() + " nuclei found <br><br>";
+        info += this.pointroi.getNCoordinates() + " nuclei found <br><br>";
         info += "</html>";
         return info;
     }
@@ -182,11 +190,20 @@ public class LifeScienceModel extends Observable{
     }
     
     /**
+     * Add a new cell to cell collection
+     * @param cell 
+     */
+    public void addCell(Cell cell){
+        this.cells.add(cell);
+    }
+    
+    
+    /**
      * Get Nuclei as PointROI
      * @return Nuclei PointRoi
      */
     public PointRoi getNuclei(){
-        return this.nuclei;
+        return this.pointroi;
     }
     
     /**
@@ -194,7 +211,7 @@ public class LifeScienceModel extends Observable{
      * @param nuclei 
      */
     public void setNuclei(PointRoi nuclei){
-        this.nuclei = nuclei;
+        this.pointroi = nuclei;
     }
     
     public ImagePlus getImage(){
@@ -244,7 +261,7 @@ public class LifeScienceModel extends Observable{
      * @param show 
      */
     public void showLabels(boolean show){
-        this.nuclei.setHideLabels(!show);
+        this.pointroi.setHideLabels(!show);
         this.image.updateAndDraw();
     }
     
@@ -283,6 +300,42 @@ public class LifeScienceModel extends Observable{
         this.setChanged();
         this.notifyObservers();
     }
+    
+    /**
+     * Number of Cells detected
+     * @return number of cells
+     */
+    public int getCellCount(){
+        return this.cells.size();
+    }
+    
+    /**
+     * Set new Pointroi according to cells
+     */
+    public void setPoints(){
+        int index = this.image.getCurrentSlice()-1;
+        int[] ox = new int[this.cells.size()];
+        int[] oy = new int[this.cells.size()];
+        int offx = this.image.getWidth();
+        int offy = this.image.getHeight();
+        for (int i=0; i<this.cells.size(); i++){
+            Point p = this.cells.get(i).getFirstNucleus().getPoint(index);
+            ox[i] = p.x;
+            oy[i] = p.y;
+            if(p.x < offx){
+                offx = p.x;
+            }
+            if(p.y < offy){
+                offy = p.y;
+            }
+        }
+        PointRoi points = new PointRoi(ox, oy, this.cells.size());
+        points.setLocation(offx, offy);
+        points.setPosition(this.image.getCurrentSlice());
+        this.overlay.add(points);
+        this.pointroi = points;
+        this.image.updateAndDraw();
+    }
 
     
     /**
@@ -294,41 +347,43 @@ public class LifeScienceModel extends Observable{
 
         double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
         
-        int i = this.nuclei.isHandle(point.x, point.y);
+        int i = this.pointroi.isHandle(point.x, point.y);
         
         if( i != (-1)){
-             int newSize = this.nuclei.getNCoordinates()-1;
+             int newSize = this.pointroi.getNCoordinates()-1;
              int[] newX = new int[newSize];
              int[] newY = new int[newSize];
              
              for(int j = 0; j<= newSize; j++){
                  if(i > j){
-                    newX[j] = this.nuclei.getXCoordinates()[j];
-                    newY[j] = this.nuclei.getYCoordinates()[j];
+                    newX[j] = this.pointroi.getXCoordinates()[j];
+                    newY[j] = this.pointroi.getYCoordinates()[j];
                  }else if(i < j){
-                    newX[j-1] = this.nuclei.getXCoordinates()[j];
-                    newY[j-1] = this.nuclei.getYCoordinates()[j];
+                    newX[j-1] = this.pointroi.getXCoordinates()[j];
+                    newY[j-1] = this.pointroi.getYCoordinates()[j];
                  }
              }
              PointRoi newroi = new PointRoi(newX, newY, newSize);
              // calculate offset
              int xoffset = 0;
              int yoffset = 0;
-             if(this.nuclei.getXCoordinates()[i] == 0){
-                 xoffset = this.nuclei.getBounds().width - newroi.getBounds().width;
+             if(this.pointroi.getXCoordinates()[i] == 0){
+                 xoffset = this.pointroi.getBounds().width - newroi.getBounds().width;
              }
-             if(this.nuclei.getYCoordinates()[i] == 0){
-                 yoffset = this.nuclei.getBounds().height - newroi.getBounds().height;
+             if(this.pointroi.getYCoordinates()[i] == 0){
+                 yoffset = this.pointroi.getBounds().height - newroi.getBounds().height;
              }
              
-             newroi.setLocation(this.nuclei.getBounds().x+xoffset, this.nuclei.getBounds().y+yoffset);
-             this.nuclei = newroi; 
+             newroi.setLocation(this.pointroi.getBounds().x+xoffset, this.pointroi.getBounds().y+yoffset);
+             this.pointroi = newroi; 
              
         }else{
-            this.nuclei = this.nuclei.addPoint(oxd, oyd);
+            this.pointroi = this.pointroi.addPoint(oxd, oyd);
         }
         
-        this.image.setRoi(this.nuclei);
+        this.image.getOverlay().remove(0);
+        pointroi.setPosition(this.image.getCurrentSlice());
+        this.image.getOverlay().add(pointroi);
         this.image.updateAndDraw();
         this.setChanged();
         this.notifyObservers();

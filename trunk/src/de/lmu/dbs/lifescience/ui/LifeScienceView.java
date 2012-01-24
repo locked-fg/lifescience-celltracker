@@ -553,7 +553,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             this.jButtonEnhancement.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
         }else if(model.getStatus() == LifeScienceModel.Status.CELLSDETECTED){
             // set roi color
-            model.getImage().getRoi().setStrokeColor(new Color(0, 166, 151));
+            model.getImage().getOverlay().get(0).setStrokeColor(new Color(0, 166, 151));
             // update buttons
             this.jButtonDetection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
             this.jButtonExport.setEnabled(true);
