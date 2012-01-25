@@ -53,7 +53,7 @@ public class ImageEnhancer extends Processor {
         BackgroundSubtracter substract = new BackgroundSubtracter();        
         for(int i=1; i<=this.image.getStackSize(); i++ ){
             this.image.setSliceWithoutUpdate(i);
-            filter.rank(process, RankFilters.MEDIAN, 4);
+            filter.rank(process, 3, RankFilters.MEDIAN);
             if(!this.quickEnhance){
                 substract.rollingBallBackground(process, 20, false, false, false, true, true);
             }
@@ -63,8 +63,9 @@ public class ImageEnhancer extends Processor {
         
         // Enhance Contrast
         ContrastEnhancer contrast = new ContrastEnhancer();
-        contrast.stretchHistogram(process, 0.5);
-        
+                
+        contrast.stretchHistogram(process, 0.1);
+               
         // update image
         this.image.updateAndDraw();
         

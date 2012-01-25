@@ -89,6 +89,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 if(action == JFileChooser.APPROVE_OPTION){
                     this.model.setImage(IJ.openImage(openDialog.getSelectedFile().getPath()));
                     // add Window listener to dock windows
+                    this.model.getImage().getWindow().removeWindowListener(this.model.getImage().getWindow().getWindowListeners()[0]);
                     this.model.getImage().getWindow().addWindowListener(this);
                     // add Listener to scrollbar
                     ij.gui.ScrollbarWithLabel scroll = (ij.gui.ScrollbarWithLabel) this.model.getImage().getWindow().getComponent(1);
@@ -104,12 +105,13 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
             case "Detect Cells":
                 CellDetector detector = new CellDetector(model.getImage(), this.model);
                 detector.run();
+                detector.groupNuclei();
                 // change mouselistener of image window
                 if(model.getImage().getCanvas().getMouseListeners().length > 0){
                     model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
                     model.getImage().getCanvas().addMouseListener(this);
                 }
-                this.model.setPoints();
+                this.model.drawNuclei();
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
@@ -221,7 +223,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
 
     @Override
     public void windowOpened(WindowEvent e) {
-        LifeScience.LOG.log(Level.FINEST, "Window obened - no action implementet yet.");
+        LifeScience.LOG.log(Level.FINEST, "Window opened - no action implementet yet.");
     }
 
     @Override

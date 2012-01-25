@@ -27,15 +27,14 @@ public class Cell {
     /** Frame number mitosis was complete  */
     private int timeMitosisEnd;
     
-    /** Nuclei of this cell (normally just one, seldom two)  */
-    private Nucleus firstNucleus;
-    private Nucleus secondNucleus;
-    
     /** True if cell has 4 chromosome sets (2 nuclei)   */
     private boolean tetraploid;
     
     /** Parent cell of this cell */
     private Cell parent;
+    
+    /** Nuclei that belong to this cell */
+    private Nucleus[] nuclei;
     
     /** Daughter cells of this cell (coming from mitosis) */
     private ArrayList<Cell> offspring;
@@ -49,7 +48,9 @@ public class Cell {
      * @param nucleus Array of nuclei
      */
     public Cell(Nucleus nucleus){
-        this.firstNucleus = nucleus;
+        this.nuclei = new Nucleus[2];
+        nucleus.setCell(this);
+        this.nuclei[0] = nucleus;
         this.tetraploid = false;
     }
     
@@ -64,12 +65,22 @@ public class Cell {
      */
     public boolean addNucleus(Nucleus nucleus){
         if(!this.tetraploid){
-            this.secondNucleus = nucleus;
+            nucleus.setCell(this);
+            this.nuclei[1] = nucleus;
             this.tetraploid = true;
             return true;
         }
         return false; 
     }
+    
+    /**
+     * Get nuclei that belong to this cell
+     * @return array of nuclei
+     */
+    public Nucleus[] getNuclei(){
+        return this.nuclei;
+    }
+    
     
     /**
      * Determine wether cell is tetraploid (2 nuclei, 4 chromosome sets)
@@ -79,23 +90,6 @@ public class Cell {
         return this.tetraploid;
     }
     
-    /**
-     * Return the first nucleus of this cell
-     * @return Nucleus
-     */
-    public Nucleus getFirstNucleus(){
-        return this.firstNucleus;
-    }
     
-    /**
-     * Return second nucleus if cell is tetraploid
-     * @return Nucleus or null if cell is not tetraploid
-     */
-    public Nucleus getSecondNucleus(){
-        if(this.tetraploid){
-            return this.secondNucleus;
-        }
-        return null;
-    }
     
 }

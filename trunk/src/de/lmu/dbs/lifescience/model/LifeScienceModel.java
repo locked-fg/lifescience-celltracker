@@ -3,11 +3,16 @@ package de.lmu.dbs.lifescience.model;
 import de.lmu.dbs.lifescience.LifeScience;
 import ij.ImagePlus;
 import ij.gui.ImageCanvas;
+import ij.gui.Line;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
+import ij.gui.TextRoi;
 import ij.measure.Calibration;
+import ij.plugin.ScaleBar;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Point;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +67,21 @@ public class LifeScienceModel extends Observable{
      * List of detected cells
      */
     private ArrayList<Cell> cells;
+    
+    /**
+     * List of detected cells
+     */
+    private ArrayList<Nucleus> nuclei;
+    
+    /**
+     * Scalebar to show upon images
+     */
+    private Line scalebar;
+    
+    /**
+     * Label for scalebar
+     */
+    private TextRoi scaleinfo;
 
     
     
@@ -83,6 +103,7 @@ public class LifeScienceModel extends Observable{
         
         //set cell collection
         this.cells = new ArrayList<>();
+        this.nuclei = new ArrayList<>();
         
     }
     
@@ -100,7 +121,20 @@ public class LifeScienceModel extends Observable{
             this.image.close();
         }
         this.image = image;
-        showImage();        
+         // configure scale
+        
+        showImage();   
+        
+        // set scalebar
+        this.scalebar = new Line(20, 20, 50, 20);
+        this.scalebar.setStrokeColor(Color.CYAN);
+        this.scalebar.setName("Approximate nuclei width");
+        this.scaleinfo = new TextRoi(20, 30, Math.round(this.image.getCalibration().pixelDepth*this.scalebar.getBounds().width * 100 /100.0) + " " + this.image.getCalibration().getUnit() + " (" + this.scalebar.getBounds().width + " px)",  new Font("Verdana", Font.PLAIN, 14));
+        this.scaleinfo.setStrokeColor(Color.CYAN);
+        this.scalebar.setPosition(0);
+        this.scaleinfo.setPosition(0);
+        this.overlay.add(this.scalebar);
+        this.overlay.add(this.scaleinfo);
     }
     
     /**
@@ -161,8 +195,13 @@ public class LifeScienceModel extends Observable{
         return info;
     }
     
-    
-    
+    /**
+     * Get the average diameter of cells
+     * @return Pixel of diameter
+     */
+    public int getNucleiDiameter(){
+        return this.scalebar.getBounds().width;
+    }
     
     
     /**
@@ -190,6 +229,15 @@ public class LifeScienceModel extends Observable{
     }
     
     /**
+     * Return nucleus with index
+     * @param index
+     * @return Nucleus
+     */
+    public Nucleus getNucleus(int index){
+        return this.nuclei.get(index);
+    }
+    
+    /**
      * Add a new cell to cell collection
      * @param cell 
      */
@@ -199,19 +247,11 @@ public class LifeScienceModel extends Observable{
     
     
     /**
-     * Get Nuclei as PointROI
-     * @return Nuclei PointRoi
-     */
-    public PointRoi getNuclei(){
-        return this.pointroi;
-    }
-    
-    /**
      * Set nuclei as PointRoi
      * @param nuclei 
      */
-    public void setNuclei(PointRoi nuclei){
-        this.pointroi = nuclei;
+    public void addNucleus(Nucleus nucleus){
+        this.nuclei.add(nucleus);
     }
     
     public ImagePlus getImage(){
@@ -310,16 +350,24 @@ public class LifeScienceModel extends Observable{
     }
     
     /**
+     * Number of Nuclei detected
+     * @return number of nuclei
+     */
+    public int getNucleiCount(){
+        return this.nuclei.size();
+    }
+    
+    /**
      * Set new Pointroi according to cells
      */
-    public void setPoints(){
+    public void drawNuclei(){
         int index = this.image.getCurrentSlice()-1;
-        int[] ox = new int[this.cells.size()];
-        int[] oy = new int[this.cells.size()];
+        int[] ox = new int[this.nuclei.size()];
+        int[] oy = new int[this.nuclei.size()];
         int offx = this.image.getWidth();
         int offy = this.image.getHeight();
-        for (int i=0; i<this.cells.size(); i++){
-            Point p = this.cells.get(i).getFirstNucleus().getPoint(index);
+        for (int i=0; i<this.nuclei.size(); i++){
+            Point p = this.nuclei.get(i).getPoint(index);
             ox[i] = p.x;
             oy[i] = p.y;
             if(p.x < offx){
@@ -329,22 +377,67 @@ public class LifeScienceModel extends Observable{
                 offy = p.y;
             }
         }
-        PointRoi points = new PointRoi(ox, oy, this.cells.size());
+        PointRoi points = new PointRoi(ox, oy, this.nuclei.size());
         points.setLocation(offx, offy);
         points.setPosition(this.image.getCurrentSlice());
+        points.setStrokeColor(Color.cyan);
         this.overlay.add(points);
         this.pointroi = points;
         this.image.updateAndDraw();
     }
-
+    
+    /**
+     * Set new ovalrois according to cells
+     */
+    public void drawCells(){
+        for (int i=0; i<this.nuclei.size(); i++){
+            if(this.nuclei.get(i).getCell()!=null){
+                
+            }
+        }
+    }
+    
+    
+    /**
+     * Delete a nucleus on location xcoord,ycoord on slice
+     * @param slice
+     * @param xcoord
+     * @param ycoord 
+     * @return true if nucleus could be deleted
+     */
+    public boolean deleteNucleus(int slice, int xcoord, int ycoord){
+        for(int i=0; i<this.nuclei.size(); i++){
+            if(this.nuclei.get(i).getPoint(slice).equals(new Point(xcoord, ycoord))){
+                this.nuclei.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+   
     
     /**
      * Edit Nuclei selection
      * @param point 
      */
     public void editNuclei(Point point) {
+        // delete roi from overlay
+        this.overlay.remove(this.pointroi);
         
-
+        double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
+        
+        int i = this.pointroi.isHandle(point.x, point.y);
+        
+        //remove
+        if(i!=(-1)){
+            this.deleteNucleus(this.image.getCurrentSlice()-1, this.pointroi.getXCoordinates()[i] + this.pointroi.getBounds().x, this.pointroi.getYCoordinates()[i] + this.pointroi.getBounds().y);
+        }else{
+            this.addNucleus(new Nucleus(this.image.getStackSize(), (int)oxd, (int)oyd));
+        }
+     
+        
+        /** old direct manipulation of roi
         double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
         
         int i = this.pointroi.isHandle(point.x, point.y);
@@ -381,12 +474,16 @@ public class LifeScienceModel extends Observable{
             this.pointroi = this.pointroi.addPoint(oxd, oyd);
         }
         
-        this.image.getOverlay().remove(0);
-        pointroi.setPosition(this.image.getCurrentSlice());
-        this.image.getOverlay().add(pointroi);
-        this.image.updateAndDraw();
+        this.pointroi.setPosition(this.image.getCurrentSlice());
+        this.pointroi.setStrokeColor(Color.cyan);
+        this.image.getOverlay().add(this.pointroi);
+        */
+        
+        
+        this.drawNuclei();
         this.setChanged();
         this.notifyObservers();
+        this.image.updateAndDraw();
     }
     
 }

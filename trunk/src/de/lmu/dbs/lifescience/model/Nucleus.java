@@ -20,6 +20,9 @@ public class Nucleus {
     /** Course of this nucleus throughout frames, specified by list of ellipses */
     private Point[] points;
     
+    /** The cell to which contains this nucleus */
+    private Cell cell;
+    
     
     //---------------- Constructor
     /**
@@ -49,4 +52,20 @@ public class Nucleus {
     public Point getPoint(int index){
         return this.points[index];
     }
+    
+    public Cell getCell(){
+        return this.cell;
+    }
+    
+    protected void setCell(Cell cell){
+        this.cell = cell;
+    }
+    
+    public boolean isAssigned(){
+        if(this.cell != null){
+            return true;
+        }
+        return false;
+    }
 }
+

@@ -9,6 +9,7 @@ package de.lmu.dbs.lifescience.ui;
 
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import ij.ImageJ;
+import ij.plugin.ScaleBar;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
@@ -492,6 +493,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         this.imagejWindow.pack();
         this.imagejWindow.removeWindowListener(this.imagejWindow.getWindowListeners()[0]);
         this.imagejWindow.addWindowListener((WindowListener) controller);
+       
     }
 
     
