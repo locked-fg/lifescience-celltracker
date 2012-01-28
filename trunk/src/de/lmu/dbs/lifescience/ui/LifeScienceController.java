@@ -10,6 +10,7 @@ import de.lmu.dbs.lifescience.processing.CellDetector;
 import de.lmu.dbs.lifescience.processing.CellTracker;
 import de.lmu.dbs.lifescience.processing.ImageEnhancer;
 import ij.IJ;
+import ij.gui.ImageWindow;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,6 +113,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     model.getImage().getCanvas().addMouseListener(this);
                 }
                 this.model.drawNuclei();
+                this.model.drawCells();
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
@@ -230,6 +232,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     public void windowClosing(WindowEvent e) {
         // Group and link windows
         if(this.model.getImage()!= null && e.getSource().equals(this.model.getImage().getWindow())){
+            this.model.getImage().getWindow().setVisible(false);
             this.view.update(this.model, e);
         }else if("ij.ImageJ".equals(e.getSource().getClass().getName())){
             this.view.showImageJ(false);

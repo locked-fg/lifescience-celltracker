@@ -39,7 +39,6 @@ public class CellDetector extends Processor {
     public void run(){
         // get processor
         ByteProcessor process = (ByteProcessor) this.image.getProcessor();
-        
          
         // Find Maxima
         MaximumFinder maxfind = new MaximumFinder();
@@ -79,16 +78,17 @@ public class CellDetector extends Processor {
         for(int i=0; i < this.model.getNucleiCount(); i++){
             Nucleus nuc = this.model.getNucleus(i);
             if(nuc.getCell()!=null){
-                break;
+                continue;
             }
-            for(int j=-5; j < 5; j++){
+            for(int j=-20; j < 20; j++){
                 // group nuclei if distance is smaller than average nuclei diameter
-                if(0 <= i+j && i+j < this.model.getNucleiCount()){
+                if((0 <= i+j) && (i+j < this.model.getNucleiCount()) && (j !=0) ){
                     Nucleus nucc = this.model.getNucleus(i+j);
-                    if(nucc.getPoint(this.model.getImage().getCurrentSlice()-1).distance(nuc.getPoint(this.model.getImage().getCurrentSlice()-1)) < this.model.getNucleiDiameter()){
+                    if(nucc.getCell()==null && nucc.getPoint(this.model.getImage().getCurrentSlice()-1).distance(nuc.getPoint(this.model.getImage().getCurrentSlice()-1)) < (this.model.getNucleiDiameter())){
                         Cell cell = new Cell(nuc);
                         cell.addNucleus(nucc);
                         this.model.addCell(cell);
+                        break;
                     }
                 }
             }

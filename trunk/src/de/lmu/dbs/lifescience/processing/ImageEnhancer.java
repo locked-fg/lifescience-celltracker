@@ -53,7 +53,7 @@ public class ImageEnhancer extends Processor {
         BackgroundSubtracter substract = new BackgroundSubtracter();        
         for(int i=1; i<=this.image.getStackSize(); i++ ){
             this.image.setSliceWithoutUpdate(i);
-            filter.rank(process, 3, RankFilters.MEDIAN);
+            filter.rank(process, 4, RankFilters.MEDIAN);
             if(!this.quickEnhance){
                 substract.rollingBallBackground(process, 20, false, false, false, true, true);
             }

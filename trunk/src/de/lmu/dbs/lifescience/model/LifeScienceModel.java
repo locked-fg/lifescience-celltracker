@@ -2,8 +2,10 @@ package de.lmu.dbs.lifescience.model;
 
 import de.lmu.dbs.lifescience.LifeScience;
 import ij.ImagePlus;
+import ij.gui.EllipseRoi;
 import ij.gui.ImageCanvas;
 import ij.gui.Line;
+import ij.gui.OvalRoi;
 import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.gui.TextRoi;
@@ -317,6 +319,7 @@ public class LifeScienceModel extends Observable{
         }else{
             this.table = new Analyzer(this.image);
             this.table.measure();
+            this.table.getResultsTable().addValue("Cells", 10);
             Analyzer.getResultsTable().show("Results");
         }   
     }
@@ -390,10 +393,16 @@ public class LifeScienceModel extends Observable{
      * Set new ovalrois according to cells
      */
     public void drawCells(){
-        for (int i=0; i<this.nuclei.size(); i++){
-            if(this.nuclei.get(i).getCell()!=null){
-                
-            }
+        for (int i=0; i<this.cells.size(); i++){
+            Point p1 = this.cells.get(i).getNuclei()[0].getPoint(this.image.getCurrentSlice()-1);
+            Point p2 = this.cells.get(i).getNuclei()[1].getPoint(this.image.getCurrentSlice()-1);
+            int newx = p2.x + ((p1.x - p2.x) /2);
+            int newy = p2.y + ((p1.y - p2.y) /2);
+            newx = Math.min(p1.x, p2.x);
+            newy = Math.min(p1.y, p2.y);
+            EllipseRoi oval = new EllipseRoi((double) p1.x, (double) p1.y, (double) p2.x, (double) p2.y, 0.7);
+            oval.setPosition(this.image.getCurrentSlice());
+            this.overlay.add(oval);
         }
     }
     
