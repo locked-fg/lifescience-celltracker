@@ -13,6 +13,7 @@ import ij.plugin.ScaleBar;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowListener;
@@ -32,6 +33,10 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
      */
     public LifeScienceView() {
         initComponents();
+        // Resize JFrame to fit full screen height
+        this.setPreferredSize(new Dimension(this.getSize().width, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()));
+        this.pack();
+
     }
 
     /** This method is called from within the constructor to
@@ -78,12 +83,13 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("LifeScience");
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setIconImage(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-logo.png")).getImage());
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), "Steps", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 12), java.awt.Color.lightGray)); // NOI18N
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel1.setFont(new java.awt.Font("Verdana", 0, 11));
-        jPanel1.setPreferredSize(new java.awt.Dimension(160, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()-80));
+        jPanel1.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jPanel1.setPreferredSize(new java.awt.Dimension(160, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()));
 
         jButtonImport.setFont(new java.awt.Font("Tahoma", 1, 11));
         jButtonImport.setForeground(new java.awt.Color(33, 90, 167));
@@ -141,15 +147,15 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonImport, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jButtonEnhancement, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jButtonDetection, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jButtonTracking, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
-                    .addComponent(jButtonExport, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE))
+                    .addComponent(jButtonImport, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jButtonEnhancement, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jButtonDetection, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jButtonTracking, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jButtonExport, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -173,18 +179,18 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(364, Short.MAX_VALUE))
+                .addContainerGap(172, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), "Info", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 12), java.awt.Color.lightGray)); // NOI18N
-        jPanel2.setPreferredSize(new java.awt.Dimension(200, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()-80));
+        jPanel2.setPreferredSize(new java.awt.Dimension(200, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()));
 
         jLabel10.setForeground(new java.awt.Color(153, 153, 153));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel10.setText("Sequence");
         jLabel10.setToolTipText("");
 
-        jLabelSequenceFrame.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabelSequenceFrame.setFont(new java.awt.Font("Arial", 0, 12));
         jLabelSequenceFrame.setForeground(new java.awt.Color(89, 97, 107));
         jLabelSequenceFrame.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelSequenceFrame.setToolTipText("");
@@ -199,7 +205,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jButtonSequenceNext.setActionCommand("Next Frame");
         jButtonSequenceNext.setEnabled(false);
 
-        jLabelSequenceInfo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabelSequenceInfo.setFont(new java.awt.Font("Arial", 0, 12));
         jLabelSequenceInfo.setForeground(new java.awt.Color(89, 97, 107));
         jLabelSequenceInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelSequenceInfo.setToolTipText("");
@@ -255,7 +261,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                             .addComponent(jButtonSequencePrev)
                             .addComponent(jButtonSequenceNext))))
                 .addGap(11, 11, 11)
-                .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                .addComponent(jLabelSequenceInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -268,7 +274,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jToggleButtonDetectionLabels.setToolTipText("Show labels of nuclei.");
         jToggleButtonDetectionLabels.setActionCommand("Show Labels");
 
-        jLabelDetectionInfo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabelDetectionInfo.setFont(new java.awt.Font("Arial", 0, 12));
         jLabelDetectionInfo.setForeground(new java.awt.Color(89, 97, 107));
         jLabelDetectionInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelDetectionInfo.setToolTipText("");
@@ -348,7 +354,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addContainerGap()
                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabelExportInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                .addComponent(jLabelExportInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -369,7 +375,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addComponent(jPanelDetection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanelExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(203, Short.MAX_VALUE))
+                .addContainerGap(156, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -379,9 +385,9 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lifeScienceProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                    .addComponent(lifeScienceProgressBar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -391,8 +397,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE))
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 503, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lifeScienceProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -465,7 +471,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
      * Initialise Controller and add Actionlisteners to Buttons
      * @param controller 
      */
-    public void initController(ActionListener controller){
+    public void initController(ActionListener controller){        
         this.jButtonImport.addActionListener(controller);
         this.jButtonDetection.addActionListener(controller);
         this.jButtonExport.addActionListener(controller);

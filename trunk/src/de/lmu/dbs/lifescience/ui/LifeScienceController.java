@@ -117,7 +117,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
-                CellTracker tracker = new CellTracker(model.getImage());
+                CellTracker tracker = new CellTracker(this.model.getImage(), this.model, this.model.getNucleiDiameter());
                 tracker.run();
                 this.model.setStatus(LifeScienceModel.Status.CELLSTRACKED);
                 break;
