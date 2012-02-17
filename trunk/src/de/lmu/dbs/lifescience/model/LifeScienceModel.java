@@ -16,6 +16,7 @@ import ij.plugin.frame.RoiManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -44,6 +45,11 @@ public class LifeScienceModel extends Observable{
      * Detected nuclei
      */
     private PointRoi pointroi;
+    
+    /**
+     * Detected Points
+     */
+    private ArrayList<Point> points;
     
     /**
      * Detected cells
@@ -106,6 +112,7 @@ public class LifeScienceModel extends Observable{
         //set cell collection
         this.cells = new ArrayList<>();
         this.nuclei = new ArrayList<>();
+        this.points = new ArrayList<>();
         
     }
     
@@ -192,7 +199,7 @@ public class LifeScienceModel extends Observable{
         String info = "<html>";
         // get type
         
-        info += this.pointroi.getNCoordinates() + " nuclei found <br><br>";
+        info += this.getNucleiCount() + " nuclei found <br><br>";
         info += "</html>";
         return info;
     }
@@ -249,11 +256,32 @@ public class LifeScienceModel extends Observable{
     
     
     /**
-     * Set nuclei as PointRoi
+     * Set nuclei
      * @param nuclei 
      */
     public void addNucleus(Nucleus nucleus){
         this.nuclei.add(nucleus);
+    }
+    
+    
+     /**
+     * Add point to temporary List of Points (not yet assigned to a nucleus)
+     * @param point 
+     */
+    public void addPoint(Point point){
+        this.points.add(point);
+    }
+    
+    public Point getPoint(int index){
+        return this.points.get(index);
+    }
+    
+    public int getPointCount(){
+        return this.points.size();
+    }
+    
+    public void clearPoints(){
+        this.points.clear();
     }
     
     public ImagePlus getImage(){
@@ -303,7 +331,14 @@ public class LifeScienceModel extends Observable{
      * @param show 
      */
     public void showLabels(boolean show){
-        this.pointroi.setHideLabels(!show);
+        this.overlay.drawLabels(show);
+        for(int i=0; i<this.overlay.size(); i++){
+            if(this.overlay.get(i) instanceof PointRoi){
+                PointRoi roi = (PointRoi) this.overlay.get(i);
+                roi.setHideLabels(!show);
+            }
+        }
+        this.overlay.size();
         this.image.updateAndDraw();
     }
     
@@ -364,28 +399,35 @@ public class LifeScienceModel extends Observable{
      * Set new Pointroi according to cells
      */
     public void drawNuclei(){
-        int index = this.image.getCurrentSlice()-1;
-        int[] ox = new int[this.nuclei.size()];
-        int[] oy = new int[this.nuclei.size()];
-        int offx = this.image.getWidth();
-        int offy = this.image.getHeight();
-        for (int i=0; i<this.nuclei.size(); i++){
-            Point p = this.nuclei.get(i).getPoint(index);
-            ox[i] = p.x;
-            oy[i] = p.y;
-            if(p.x < offx){
-                offx = p.x;
+        for(int j=0; j<this.image.getStackSize(); j++){
+            this.image.setSlice(j+1);
+            int[] ox = new int[this.nuclei.size()];
+            int[] oy = new int[this.nuclei.size()];
+            int offx = this.image.getWidth();
+            int offy = this.image.getHeight();
+            for (int i=0; i<this.nuclei.size(); i++){
+                if(this.nuclei.get(i).getPoint(j)!= null){
+                    Point p = this.nuclei.get(i).getPoint(j);
+                    ox[i] = p.x;
+                    oy[i] = p.y;
+                    if(p.x < offx){
+                        offx = p.x;
+                    }
+                    if(p.y < offy){
+                        offy = p.y;
+                    }
+                }
+                
             }
-            if(p.y < offy){
-                offy = p.y;
-            }
+            PointRoi points = new PointRoi(ox, oy, this.nuclei.size());
+            points.setLocation(offx, offy);
+            points.setPosition(this.image.getCurrentSlice());
+            points.setStrokeColor(Color.cyan);
+            this.overlay.add(points);
+            // TODO: unuse pointroi
+            this.pointroi = points;
         }
-        PointRoi points = new PointRoi(ox, oy, this.nuclei.size());
-        points.setLocation(offx, offy);
-        points.setPosition(this.image.getCurrentSlice());
-        points.setStrokeColor(Color.cyan);
-        this.overlay.add(points);
-        this.pointroi = points;
+        this.image.setSlice(1);
         this.image.updateAndDraw();
     }
     

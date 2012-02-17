@@ -5,10 +5,13 @@ import de.lmu.dbs.lifescience.model.Cell;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import de.lmu.dbs.lifescience.model.Nucleus;
 import ij.ImagePlus;
+import ij.gui.OvalRoi;
 import ij.gui.PointRoi;
 import ij.plugin.filter.MaximumFinder;
 import ij.process.ByteProcessor;
 import ij.process.ImageProcessor;
+import java.awt.Point;
+import java.awt.geom.Point2D;
 
 
 /**
@@ -39,31 +42,47 @@ public class CellDetector extends Processor {
     public void run(){
         // get processor
         ByteProcessor process = (ByteProcessor) this.image.getProcessor();
+        
+        //init offset
+        int xoff = 0;
+        int yoff = 0;
+        
+        
          
         // Find Maxima
         MaximumFinder maxfind = new MaximumFinder();
         maxfind.setup(null, this.image);
         maxfind.findMaxima(process, 10, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
 
-        // Build data set
-        PointRoi points = (PointRoi) this.image.getRoi();
-        // info: coordinates sorted by intensity 
-        int[] xcoords = points.getXCoordinates();
-        int[] ycoords = points.getYCoordinates();
-        int xoff = points.getBounds().x;
-        int yoff = points.getBounds().y;
-        
-        Nucleus nucleus;
+        if (this.image.getRoi() instanceof PointRoi){
+            // Build data set
+            PointRoi points = (PointRoi) this.image.getRoi();
+            // info: coordinates sorted by intensity 
+            int[] xcoords = points.getXCoordinates();
+            int[] ycoords = points.getYCoordinates();
+            xoff += points.getBounds().x;
+            yoff += points.getBounds().y;
 
-        // Detect Nuclei in first Image
-        for(int i=0; i < xcoords.length; i++){
-            //TODO look in previous 10 cells and group nuclei if distance is smaller than cell radius
-            // works becaus coordinates are sorted by intensity of pixels. corresponding nuclei mostly have similar intensities.
-            //TODO split nuclei through watershed algorithm
-            //create new nucleus
+            // check if initial detection or followup
+            if(this.model.getNucleiCount()>0){
+                for(int i=0; i < xcoords.length; i++){
+                    // add Points
+                    this.model.addPoint(new Point(xcoords[i]+xoff, ycoords[i]+yoff));
+                }
 
-            this.model.addNucleus(new Nucleus(this.image.getImageStackSize(), xcoords[i]+xoff, ycoords[i]+yoff));
+            }else{
+                for(int i=0; i < xcoords.length; i++){
+                    //TODO look in previous 10 cells and group nuclei if distance is smaller than cell radius
+                    // works becaus coordinates are sorted by intensity of pixels. corresponding nuclei mostly have similar intensities.
+                    //TODO split nuclei through watershed algorithm
+                    //create new nucleus
+
+                    this.model.addNucleus(new Nucleus(this.image.getImageStackSize(), xcoords[i]+xoff, ycoords[i]+yoff));
+                }
+            }
         }
+        
+        
         this.image.killRoi();
                 
         // update image

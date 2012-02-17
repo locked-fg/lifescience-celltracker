@@ -494,8 +494,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         this.lifeScienceProgressBar.show(0);
         // configure imagej windows
         this.imagejWindow = new ij.ImageJ(ImageJ.NO_SHOW);
-        this.imagejWindow.setLocation(0, this.getHeight());
-        this.imagejWindow.setPreferredSize(new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth(), 110));
+        this.imagejWindow.setLocation(0, this.getHeight()-150);
+        this.imagejWindow.setPreferredSize(new Dimension(this.getWidth(), 110));
         this.imagejWindow.pack();
         this.imagejWindow.removeWindowListener(this.imagejWindow.getWindowListeners()[0]);
         this.imagejWindow.addWindowListener((WindowListener) controller);

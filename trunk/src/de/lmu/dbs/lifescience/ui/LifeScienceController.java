@@ -11,7 +11,9 @@ import de.lmu.dbs.lifescience.processing.CellTracker;
 import de.lmu.dbs.lifescience.processing.ImageEnhancer;
 import ij.IJ;
 import ij.gui.ImageWindow;
+import ij.gui.OvalRoi;
 import java.awt.Frame;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.AdjustmentEvent;
@@ -57,6 +59,9 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     
     /** View that for user interaction */
     private final LifeScienceView view;
+    
+    /** Cell Detector */
+    private CellDetector detector;
     
     /** Modes */
     private Mode mode;
@@ -104,7 +109,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.IMAGEENHANCED);
                 break;
             case "Detect Cells":
-                CellDetector detector = new CellDetector(model.getImage(), this.model);
+                this.detector = new CellDetector(model.getImage(), this.model);
                 detector.run();
                 detector.groupNuclei();
                 // change mouselistener of image window
@@ -114,11 +119,16 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 }
                 this.model.drawNuclei();
                 this.model.drawCells();
+                this.model.getImage().setRoi(new OvalRoi(721, 810, 90, 90));
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
-                CellTracker tracker = new CellTracker(this.model.getImage(), this.model, this.model.getNucleiDiameter());
+                CellTracker tracker = new CellTracker(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter()*3);
                 tracker.run();
+                
+                this.model.drawNuclei();
+                this.model.drawCells();
+                
                 this.model.setStatus(LifeScienceModel.Status.CELLSTRACKED);
                 break;
             case "Export CSV":

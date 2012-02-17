@@ -61,6 +61,10 @@ public class Nucleus {
         this.cell = cell;
     }
     
+    public void setPoint(Point p, int index){
+        this.points[index] = p;
+    }
+    
     public boolean isAssigned(){
         if(this.cell != null){
             return true;
