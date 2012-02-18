@@ -63,14 +63,14 @@ public class CellTracker extends Processor {
                     Point poi = nuc.getPoint(k-1);
                     this.image.setSlice(k+1);
                     this.image.setRoi(new OvalRoi((int) poi.getX()-(this.maxDistance/2), (int) poi.getY()-(this.maxDistance/2), this.maxDistance, this.maxDistance));
-                    LifeScience.LOG.info("Point: " + poi.getLocation().toString() + " - Roi: " + this.image.getRoi().toString());
+                    //LifeScience.LOG.info("Point: " + poi.getLocation().toString() + " - Roi: " + this.image.getRoi().toString());
                     // Detect Nuclei...
                     this.detector.run();
 
                     // Nearest Neighbor search
                     if(this.model.getPointCount()>=1){
                         nuc.setPoint(this.model.getPoint(this.model.getPointCount()-1), k);
-                        LifeScience.LOG.info("Point: " + this.model.getPoint(this.model.getPointCount()-1));
+                        //LifeScience.LOG.info("Point: " + this.model.getPoint(this.model.getPointCount()-1));
                     }
                 }
 

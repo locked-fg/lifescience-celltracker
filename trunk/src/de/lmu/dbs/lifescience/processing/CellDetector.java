@@ -43,9 +43,7 @@ public class CellDetector extends Processor {
         // get processor
         ByteProcessor process = (ByteProcessor) this.image.getProcessor();
         
-        //init offset
-        int xoff = 0;
-        int yoff = 0;
+        
         
         
          
@@ -60,8 +58,8 @@ public class CellDetector extends Processor {
             // info: coordinates sorted by intensity 
             int[] xcoords = points.getXCoordinates();
             int[] ycoords = points.getYCoordinates();
-            xoff += points.getBounds().x;
-            yoff += points.getBounds().y;
+            int xoff = points.getBounds().x;
+            int yoff = points.getBounds().y;
 
             // check if initial detection or followup
             if(this.model.getNucleiCount()>0){

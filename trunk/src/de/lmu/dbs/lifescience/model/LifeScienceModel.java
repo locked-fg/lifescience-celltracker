@@ -406,8 +406,10 @@ public class LifeScienceModel extends Observable{
             int offx = this.image.getWidth();
             int offy = this.image.getHeight();
             for (int i=0; i<this.nuclei.size(); i++){
+                Point p = new Point(this.image.getWidth(), this.image.getHeight());
                 if(this.nuclei.get(i).getPoint(j)!= null){
-                    Point p = this.nuclei.get(i).getPoint(j);
+                    p = this.nuclei.get(i).getPoint(j);
+                }
                     ox[i] = p.x;
                     oy[i] = p.y;
                     if(p.x < offx){
@@ -416,16 +418,18 @@ public class LifeScienceModel extends Observable{
                     if(p.y < offy){
                         offy = p.y;
                     }
-                }
                 
             }
             PointRoi points = new PointRoi(ox, oy, this.nuclei.size());
             points.setLocation(offx, offy);
             points.setPosition(this.image.getCurrentSlice());
             points.setStrokeColor(Color.cyan);
+            
             this.overlay.add(points);
             // TODO: unuse pointroi
-            this.pointroi = points;
+            if(j==0){
+                this.pointroi = points;
+            }
         }
         this.image.setSlice(1);
         this.image.updateAndDraw();

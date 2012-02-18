@@ -119,11 +119,10 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 }
                 this.model.drawNuclei();
                 this.model.drawCells();
-                this.model.getImage().setRoi(new OvalRoi(721, 810, 90, 90));
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
-                CellTracker tracker = new CellTracker(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter()*3);
+                CellTracker tracker = new CellTracker(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter());
                 tracker.run();
                 
                 this.model.drawNuclei();
