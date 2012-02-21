@@ -7,7 +7,7 @@ package de.lmu.dbs.lifescience.ui;
 import de.lmu.dbs.lifescience.LifeScience;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import de.lmu.dbs.lifescience.processing.CellDetector;
-import de.lmu.dbs.lifescience.processing.CellTracker;
+import de.lmu.dbs.lifescience.processing.CellTrackerFollow;
 import de.lmu.dbs.lifescience.processing.ImageEnhancer;
 import ij.IJ;
 import ij.gui.ImageWindow;
@@ -122,7 +122,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
-                CellTracker tracker = new CellTracker(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter());
+                CellTrackerFollow tracker = new CellTrackerFollow(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter()*3);
                 tracker.run();
                 
                 this.model.drawNuclei();

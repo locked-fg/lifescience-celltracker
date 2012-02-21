@@ -1,6 +1,5 @@
 package de.lmu.dbs.lifescience.model;
 
-import de.lmu.dbs.lifescience.LifeScience;
 import ij.ImagePlus;
 import ij.gui.EllipseRoi;
 import ij.gui.ImageCanvas;
@@ -10,16 +9,15 @@ import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.gui.TextRoi;
 import ij.measure.Calibration;
-import ij.plugin.ScaleBar;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
+import java.util.TreeMap;
 
 /**
  *
@@ -326,6 +324,8 @@ public class LifeScienceModel extends Observable{
         return false;
     }
     
+   
+    
     /**
      * Shows Labels of Nuclei or not
      * @param show 
@@ -393,6 +393,48 @@ public class LifeScienceModel extends Observable{
      */
     public int getNucleiCount(){
         return this.nuclei.size();
+    }
+    
+    
+    
+    
+    /**
+     * Return k nearest Nuclei to a given point(x,y) if they are within given radius.
+     * Only search in specified slice.
+     * 
+     * @param k size of return set
+     * @param x - coordinate of search point
+     * @param y - coordinate of search point
+     * @param slice of image stack
+     * @param radius in which to search for kNN
+     * @return indices of found nuclei
+     */
+    public Integer[] getkNearestNuclei(int k, int x, int y, int slice, int radius){
+        
+        // Tree
+        TreeMap<Double, Integer> nucs = new TreeMap<>();
+
+        
+        for(int i=0; i<this.nuclei.size(); i++){
+            Point p = this.nuclei.get(i).getPoint(slice);
+            
+            // calculate euclidean distance to p
+            double euclid = Math.sqrt(Math.pow((p.x - x), 2.0) + Math.pow((p.y - y), 2.0));
+            
+            // check if point is in bounds defined through diameter
+            if(euclid < radius){
+                
+                // insert into tree
+                if(nucs.size() >= k){
+                    nucs.put(euclid, i);
+                    nucs.pollLastEntry();
+                }else{
+                    nucs.put(euclid, i);
+                }
+ 
+            }   
+        }
+        return (Integer[]) nucs.values().toArray(new Integer[k]);
     }
     
     /**

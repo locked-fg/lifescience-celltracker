@@ -16,11 +16,14 @@ import java.awt.geom.Point2D;
  * 
  * @author bea
  */
-public class CellTracker extends Processor {
+public class CellTrackerFollow extends Processor {
 
     //---------------- Attributes
     /** Maximum delta distance from frame i to i+1 in px  */
     int maxDistance = 0;
+    
+    /** Intensity Variance */
+    int intesityVar = 10;
     
     /** Model    */
     LifeScienceModel model;
@@ -34,10 +37,15 @@ public class CellTracker extends Processor {
     /**
      * Create a new instance for the cell detector that performs video tracking on the sequence
      * 
+     * Tracking is achieved by running the CellDetector in the surrounding of previously detected blobs. 
+     * In this area of interest detected blobs are compared by intensity to ensure correct correlation.
+     * 
      * @param image
+     * @param model LifeScienceModel
+     * @param detector CellDetector Class
      * @param maxDistance 
      */
-    public CellTracker(ImagePlus image, LifeScienceModel model, CellDetector detector, int maxDistance) {
+    public CellTrackerFollow(ImagePlus image, LifeScienceModel model, CellDetector detector, int maxDistance) {
         super(image);
         this.model = model;
         this.detector = detector;
@@ -50,9 +58,10 @@ public class CellTracker extends Processor {
     //---------------- Methods
     
     /**
-     * run CellTracker
+     * run CellTrackerFollow
      */
     public void run(){
+        
         // track each nucleus through all images
         for(int i=0; i<this.model.getNucleiCount(); i++){
             this.model.clearPoints();
@@ -63,14 +72,34 @@ public class CellTracker extends Processor {
                     Point poi = nuc.getPoint(k-1);
                     this.image.setSlice(k+1);
                     this.image.setRoi(new OvalRoi((int) poi.getX()-(this.maxDistance/2), (int) poi.getY()-(this.maxDistance/2), this.maxDistance, this.maxDistance));
-                    //LifeScience.LOG.info("Point: " + poi.getLocation().toString() + " - Roi: " + this.image.getRoi().toString());
+
                     // Detect Nuclei...
                     this.detector.run();
 
-                    // Nearest Neighbor search
+                    // process hits in surrounding of previous found nucleus
+                    boolean pointset = false;
                     if(this.model.getPointCount()>=1){
-                        nuc.setPoint(this.model.getPoint(this.model.getPointCount()-1), k);
-                        //LifeScience.LOG.info("Point: " + this.model.getPoint(this.model.getPointCount()-1));
+                        for(int l=0; l<this.model.getPointCount(); l++){
+                            Point newpoi = this.model.getPoint(l);
+                            int oldintensity = this.image.getPixel(poi.x, poi.y)[0];
+                            int newintensity = this.image.getPixel(newpoi.x, newpoi.y)[0];
+                            int diffintensity = 255;
+                            
+                            // improve tracking and avoid false clustering by comparing intensities
+                            if((oldintensity + this.intesityVar > newintensity) && (oldintensity - this.intesityVar < newintensity)){
+                                // set new Point in nucleus if intensity difference is smaller than before
+                                int newdiffintensity = Math.abs(newintensity-oldintensity);
+                                if(newdiffintensity<diffintensity){
+                                    diffintensity = newdiffintensity;
+                                    nuc.setPoint(newpoi, k);
+                                    pointset = true;
+                                }   
+                            }
+                        }
+                    }
+                    if(!pointset){
+                        // set old Point in nucleus
+                        nuc.setPoint(this.model.getNucleus(i).getPoint(k-1), k);
                     }
                 }
 
