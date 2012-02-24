@@ -1,5 +1,6 @@
 package de.lmu.dbs.lifescience.model;
 
+import de.lmu.dbs.lifescience.LifeScience;
 import ij.ImagePlus;
 import ij.gui.EllipseRoi;
 import ij.gui.ImageCanvas;
@@ -402,40 +403,52 @@ public class LifeScienceModel extends Observable{
      * Return k nearest Nuclei to a given point(x,y) if they are within given radius.
      * Only search in specified slice.
      * 
+     * TODO why only one return value not k??? => radius
+     * 
      * @param k size of return set
      * @param x - coordinate of search point
      * @param y - coordinate of search point
-     * @param slice of image stack
+     * @param index of image stack
      * @param radius in which to search for kNN
      * @return indices of found nuclei
      */
-    public Integer[] getkNearestNuclei(int k, int x, int y, int slice, int radius){
+    public Integer[] getkNearestNuclei(int k, int x, int y, int index, int radius){
         
-        // Tree
+        // Treemap to administer results
         TreeMap<Double, Integer> nucs = new TreeMap<>();
 
-        
+        // got through all found nuclei
         for(int i=0; i<this.nuclei.size(); i++){
-            Point p = this.nuclei.get(i).getPoint(slice);
             
-            // calculate euclidean distance to p
-            double euclid = Math.sqrt(Math.pow((p.x - x), 2.0) + Math.pow((p.y - y), 2.0));
+            // get point at current index
+            Point p = this.nuclei.get(i).getPoint(index);
             
-            // check if point is in bounds defined through diameter
-            if(euclid < radius){
-                
-                // insert into tree
-                if(nucs.size() >= k){
-                    nucs.put(euclid, i);
-                    nucs.pollLastEntry();
-                }else{
-                    nucs.put(euclid, i);
-                }
- 
-            }   
+            if(p != null){
+                // calculate euclidean distance to p
+                double euclid = Math.sqrt(Math.pow((p.x - x), 2.0) + Math.pow((p.y - y), 2.0));
+
+                // check if point is in bounds defined through diameter
+                if(euclid < radius){
+                    
+                    // insert into tree
+                    if(nucs.size() >= k){
+                        nucs.put(euclid, i);
+                        nucs.pollLastEntry();
+                    }else{
+                        nucs.put(euclid, i);
+                    }
+                }   
+            }
+            
         }
+        LifeScience.LOG.info("Treemap: " + nucs.toString());
         return (Integer[]) nucs.values().toArray(new Integer[k]);
     }
+    
+    
+    
+    
+    
     
     /**
      * Set new Pointroi according to cells

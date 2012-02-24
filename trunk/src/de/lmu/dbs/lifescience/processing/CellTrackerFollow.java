@@ -5,11 +5,7 @@ import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import de.lmu.dbs.lifescience.model.Nucleus;
 import ij.ImagePlus;
 import ij.gui.OvalRoi;
-import ij.plugin.filter.MaximumFinder;
-import ij.process.ByteProcessor;
-import ij.process.ImageProcessor;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  * This class provides methods to track cells over images.

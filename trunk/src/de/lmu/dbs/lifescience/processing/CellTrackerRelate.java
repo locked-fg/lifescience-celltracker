@@ -4,12 +4,7 @@ import de.lmu.dbs.lifescience.LifeScience;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import de.lmu.dbs.lifescience.model.Nucleus;
 import ij.ImagePlus;
-import ij.gui.OvalRoi;
-import ij.plugin.filter.MaximumFinder;
-import ij.process.ByteProcessor;
-import ij.process.ImageProcessor;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 
 /**
  * This class provides methods to track cells over images.
@@ -20,10 +15,13 @@ public class CellTrackerRelate extends Processor {
 
     //---------------- Attributes
     /** Maximum delta distance from frame i to i+1 in px  */
-    int maxDistance = 0;
+    int maxDistanceDiff = 0;
     
     /** Intensity Variance */
-    int intesityVar = 10;
+    int maxIntesityDiff = 40;
+    
+    /** size of nearest neighbor search */
+    int k = 1;
     
     /** Model    */
     LifeScienceModel model;
@@ -37,19 +35,29 @@ public class CellTrackerRelate extends Processor {
     /**
      * Create a new instance for the cell detector that performs video tracking on the sequence
      * 
-     * Tracking is achieved by running the CellDetector in the surrounding of previously detected blobs. 
-     * In this area of interest detected blobs are compared by intensity to ensure correct correlation.
+     * This cell tracker goes through all images of a sequence and runs a cell detector on them. 
+     * Each detected blob is then related to blobs in the previous images as follows:
+     * 1. The k nearest neighbor blobs in the previous detection that are within a threshold radius
+     *    The result set is sorted with smallest distance up front
+     * 2. Go through results and determine wether it is a valid candidate by comparing intensity-differences.
+     *    With this technique it is possible to ensure that no false assignments can occur even if blobs are very near to each other
+     * 3. Do something when blobs could not be assigned... -> TODO
+     * 
      * 
      * @param image
      * @param model LifeScienceModel
-     * @param detector CellDetector Class
-     * @param maxDistance 
+     * @param detector CellDetector Class 
+     * @param maxDistanceDiff Maximal distance that detected blobs can vary between slices of the sequence
+     * @param maxIntensityDiff Maximal difference in intensity that can occur from one blob to corresponing blob in next slice
+     * @param k Size of resultset from nearest-neighbor-search of blobs
      */
-    public CellTrackerRelate(ImagePlus image, LifeScienceModel model, CellDetector detector, int maxDistance) {
+    public CellTrackerRelate(ImagePlus image, LifeScienceModel model, CellDetector detector, int maxDistanceDiff, int maxIntensityDiff, int k) {
         super(image);
         this.model = model;
         this.detector = detector;
-        this.maxDistance = maxDistance;
+        this.maxDistanceDiff = maxDistanceDiff;
+        this.maxIntesityDiff = maxIntesityDiff;
+        this.k = k;
     }
     
     
@@ -58,80 +66,63 @@ public class CellTrackerRelate extends Processor {
     //---------------- Methods
     
     /**
-     * run CellTrackerFollow
+     * run CellTrackerRelate
+     * Goes through all slices of images sequence and relates detected blobs
      */
     public void run(){
         
-        for(int k=1; k<this.image.getStackSize(); k++){
-            this.image.setSlice(k+1);
+        // Go through all slices of sequence
+        for(int i=1; i<this.image.getStackSize(); i++){
             
-            // Detect Nuclei...
+            // Set slice
+            this.image.setSlice(i+1);
+            
+            // Clear point cache
+            this.model.clearPoints();
+            
+            // Detect Nuclei (Run CellDetector) ...
             this.detector.run();
             
-            // Assign detected Points
+            // Go through detected points in pointcache
             for(int l=0; l<this.model.getPointCount(); l++){
+                
+                // current point to evaluate
                 Point newpoi = this.model.getPoint(l);
                 
-                // Get potential matches in old pointset
-                Integer[] kNN = this.model.getkNearestNuclei(4, newpoi.x, newpoi.y, k, this.maxDistance);
+                // Get potential matches in old pointset (get k nearest neighbor points)
+                Integer[] kNN = this.model.getkNearestNuclei(this.k, newpoi.x, newpoi.y, i-1, this.maxDistanceDiff);
                 
                 // Test for matching intensity
+                boolean matchfound = false;
                 
-            }
-            
-            
-            
-        }
-        
-        
-        
-        
-        // track each nucleus through all images
-        for(int i=0; i<this.model.getNucleiCount(); i++){
-            this.model.clearPoints();
-            Nucleus nuc = this.model.getNucleus(i);
-            for(int k=1; k<this.image.getStackSize(); k++){
-                // Search in surroundings
-                if(nuc.getPoint(k-1)!=null){
-                    Point poi = nuc.getPoint(k-1);
-                    this.image.setSlice(k+1);
-                    this.image.setRoi(new OvalRoi((int) poi.getX()-(this.maxDistance/2), (int) poi.getY()-(this.maxDistance/2), this.maxDistance, this.maxDistance));
+                // Test all nearest neighbors until match found
+                for(int j=0; j<kNN.length; j++){
+                    // TODO - kNN only returns one neighbor - LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
+                    if(kNN[j] != null){
+                        //LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
+                        
+                        Nucleus oldnuc = this.model.getNucleus(kNN[j]);
+                        Point oldpoi = oldnuc.getPoint(i-1);
 
-                    // Detect Nuclei...
-                    this.detector.run();
-
-                    // process hits in surrounding of previous found nucleus
-                    boolean pointset = false;
-                    if(this.model.getPointCount()>=1){
-                        for(int l=0; l<this.model.getPointCount(); l++){
-                            Point newpoi = this.model.getPoint(l);
-                            int oldintensity = this.image.getPixel(poi.x, poi.y)[0];
-                            int newintensity = this.image.getPixel(newpoi.x, newpoi.y)[0];
-                            int diffintensity = 255;
-                            
-                            // improve tracking and avoid false clustering by comparing intensities
-                            if((oldintensity + this.intesityVar > newintensity) && (oldintensity - this.intesityVar < newintensity)){
-                                // set new Point in nucleus if intensity difference is smaller than before
-                                int newdiffintensity = Math.abs(newintensity-oldintensity);
-                                if(newdiffintensity<diffintensity){
-                                    diffintensity = newdiffintensity;
-                                    nuc.setPoint(newpoi, k);
-                                    pointset = true;
-                                }   
-                            }
+                        // Select point if intensity does not variate to much
+                        if(Math.abs(this.image.getPixel(oldpoi.x, oldpoi.y)[0]-this.image.getPixel(newpoi.x, newpoi.y)[0])<this.maxIntesityDiff){
+                            oldnuc.setPoint(newpoi, i);
+                            matchfound = true;
+                            break;
                         }
-                    }
-                    if(!pointset){
-                        // set old Point in nucleus
-                        nuc.setPoint(this.model.getNucleus(i).getPoint(k-1), k);
-                    }
+                    }  
                 }
-
-                // create new image clip and search for maximum
+                // TODO do something if no match found
+                // if no match found create new nucleus ---> to be related yet
+                if(!matchfound && kNN[0]!= null){
+                    this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
+                }
                 
             }
-            
+
         }
+        
+        
         // update image
         this.image.updateAndDraw();
     }

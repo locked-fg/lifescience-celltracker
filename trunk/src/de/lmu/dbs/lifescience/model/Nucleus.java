@@ -47,6 +47,18 @@ public class Nucleus {
     }
     
     
+    /**
+     * Create new Nucleus with first point at specified index position
+     * @param sequenceLength Length of image sequence
+     * @param p Point
+     * @param index Index at which first Point should be set
+     */
+    public Nucleus(int sequenceLength, Point p, int index){
+        this.points = new Point[sequenceLength];
+        this.points[index] = p;
+    }
+    
+    
     //---------------- Methods
     
     public Point getPoint(int index){
