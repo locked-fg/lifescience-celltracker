@@ -101,6 +101,9 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     ij.gui.ScrollbarWithLabel scroll = (ij.gui.ScrollbarWithLabel) this.model.getImage().getWindow().getComponent(1);
                     scroll.addAdjustmentListener(this);
                     this.model.setStatus(LifeScienceModel.Status.IMAGEREADY);
+                    // reset model
+                    this.model.reset();
+                    
                 }
                 break;
             case "Enhance Images":
@@ -117,8 +120,10 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                     model.getImage().getCanvas().removeMouseListener(model.getImage().getCanvas().getMouseListeners()[0]);
                     model.getImage().getCanvas().addMouseListener(this);
                 }
+                
                 this.model.drawNuclei();
                 this.model.drawCells();
+                this.model.showLabels(false);
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
@@ -198,6 +203,12 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 {
                     JToggleButton btn = (JToggleButton) e.getSource();
                     this.model.showLabels(btn.isSelected());
+                    break;
+                }
+            case "Show Markers":
+                {
+                    JToggleButton btn = (JToggleButton) e.getSource();
+                    this.model.showMarkers(btn.isSelected());
                     break;
                 }
             case "Show Table":

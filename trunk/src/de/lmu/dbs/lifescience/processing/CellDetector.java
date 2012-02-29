@@ -92,6 +92,7 @@ public class CellDetector extends Processor {
      * This class does an initial grouping of nuclei. Nuclei are grouped to belong to one cell if their distance is smaller than the average nuclei diameter.
      */
     public void groupNuclei(){
+        int index = this.model.getImage().getCurrentSlice()-1;
         for(int i=0; i < this.model.getNucleiCount(); i++){
             Nucleus nuc = this.model.getNucleus(i);
             if(nuc.getCell()!=null){
@@ -101,7 +102,10 @@ public class CellDetector extends Processor {
                 // group nuclei if distance is smaller than average nuclei diameter
                 if((0 <= i+j) && (i+j < this.model.getNucleiCount()) && (j !=0) ){
                     Nucleus nucc = this.model.getNucleus(i+j);
-                    if(nucc.getCell()==null && nucc.getPoint(this.model.getImage().getCurrentSlice()-1).distance(nuc.getPoint(this.model.getImage().getCurrentSlice()-1)) < (this.model.getNucleiDiameter())){
+                    if(nucc.getCell()==null &&
+                            nucc.getPoint(index)!=null &&
+                            nuc.getPoint(index)!=null &&
+                            nucc.getPoint(index).distance(nuc.getPoint(index)) < (this.model.getNucleiDiameter())){
                         Cell cell = new Cell(nuc);
                         cell.addNucleus(nucc);
                         this.model.addCell(cell);

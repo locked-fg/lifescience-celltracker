@@ -83,6 +83,7 @@ public class CellTrackerRelate extends Processor {
             // Detect Nuclei (Run CellDetector) ...
             this.detector.run();
             
+            
             // Go through detected points in pointcache
             for(int l=0; l<this.model.getPointCount(); l++){
                 
@@ -117,6 +118,8 @@ public class CellTrackerRelate extends Processor {
                 if(!matchfound && kNN[0]!= null){
                     this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
                 }
+                
+                this.detector.groupNuclei();
                 
             }
 

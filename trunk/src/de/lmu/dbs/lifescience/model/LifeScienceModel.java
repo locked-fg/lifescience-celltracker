@@ -150,8 +150,7 @@ public class LifeScienceModel extends Observable{
         this.scaleinfo.setStrokeColor(Color.CYAN);
         this.scalebar.setPosition(0);
         this.scaleinfo.setPosition(0);
-        this.overlay.add(this.scalebar);
-        this.overlay.add(this.scaleinfo);
+        this.resetOverlay();
     }
     
     /**
@@ -208,6 +207,7 @@ public class LifeScienceModel extends Observable{
         // get type
         
         info += this.getNucleiCount() + " nuclei found <br><br>";
+        info += this.getCellCount() + " cells found <br><br>";
         info += "</html>";
         return info;
     }
@@ -428,15 +428,50 @@ public class LifeScienceModel extends Observable{
      * @param show 
      */
     public void showLabels(boolean show){
-        this.overlay.drawLabels(show);
+        //this.overlay.drawLabels(show);
+        this.overlay.drawNames(show);
+        this.overlay.setLabelColor(Color.yellow);
         for(int i=0; i<this.overlay.size(); i++){
             if(this.overlay.get(i) instanceof PointRoi){
                 PointRoi roi = (PointRoi) this.overlay.get(i);
                 roi.setHideLabels(!show);
+            }else if(this.overlay.get(i) instanceof OvalRoi){
+                // no function yet
+            }else{
+                this.overlay.get(i).setName("");
             }
         }
-        this.overlay.size();
         this.image.updateAndDraw();
+        this.setChanged();
+        this.notifyObservers();
+    }
+    
+    
+    
+    /**
+     * Shows Markers of nuclei and cells or not
+     * @param show 
+     */
+    public void showMarkers(boolean show){
+        if(show){
+            this.drawCells();
+            this.drawNuclei();
+        }else{
+            this.resetOverlay();
+        }
+        this.image.updateAndDraw();
+        this.setChanged();
+        this.notifyObservers();
+    }
+    
+    
+    /**
+     * Clear nuclei and cells from view
+     */
+    public void resetOverlay(){
+        this.overlay.clear();
+        this.overlay.add(this.scalebar);
+        this.overlay.add(this.scaleinfo);
     }
     
     
@@ -487,6 +522,7 @@ public class LifeScienceModel extends Observable{
     public int getNucleiCount(){
         return this.nuclei.size();
     }
+    
     
     
     
@@ -546,6 +582,7 @@ public class LifeScienceModel extends Observable{
      * Set new Pointroi according to cells
      */
     public void drawNuclei(){
+        boolean labels = this.overlay.getDrawNames();
         for(int j=0; j<this.image.getStackSize(); j++){
             this.image.setSlice(j+1);
             int[] ox = new int[this.nuclei.size()];
@@ -578,6 +615,7 @@ public class LifeScienceModel extends Observable{
                 this.pointroi = points;
             }
         }
+        this.showLabels(labels);
         this.image.setSlice(1);
         this.image.updateAndDraw();
     }
@@ -586,6 +624,7 @@ public class LifeScienceModel extends Observable{
      * Set new ovalrois according to cells
      */
     public void drawCells(){
+        boolean labels = this.overlay.getDrawNames();
         // size of oval
         int size = (int) (this.getNucleiDiameter()*1.5);
         
@@ -598,12 +637,17 @@ public class LifeScienceModel extends Observable{
                 if(cell !=null){
                     //EllipseRoi oval = new EllipseRoi((double) p1.x, (double) p1.y, (double) p2.x, (double) p2.y, 0.7);
                     OvalRoi oval = new OvalRoi(cell.x-(size/2), cell.y-(size/2), size, size);
+                    oval.setName("" + i);
                     oval.setPosition(j+1);
                     this.overlay.add(oval);
                 }
             }
         }
+        this.showLabels(labels);
+        this.image.updateAndDraw();
     }
+    
+    
     
     
     /**
@@ -615,8 +659,9 @@ public class LifeScienceModel extends Observable{
      */
     public boolean deleteNucleus(int slice, int xcoord, int ycoord){
         for(int i=0; i<this.nuclei.size(); i++){
-            if(this.nuclei.get(i).getPoint(slice).equals(new Point(xcoord, ycoord))){
-                this.nuclei.remove(i);
+            if(this.nuclei.get(i).getPoint(slice)!= null && this.nuclei.get(i).getPoint(slice).equals(new Point(xcoord, ycoord))){
+                LifeScience.LOG.info("remove..." + i);
+                LifeScience.LOG.info(this.nuclei.remove(i).toString());
                 return true;
             }
         }
@@ -631,7 +676,7 @@ public class LifeScienceModel extends Observable{
      */
     public void editNuclei(Point point) {
         // delete roi from overlay
-        this.overlay.remove(this.pointroi);
+        this.resetOverlay();
         
         double oxd=this.image.getCanvas().offScreenXD(point.x), oyd=this.image.getCanvas().offScreenYD(point.y);
         
@@ -689,9 +734,24 @@ public class LifeScienceModel extends Observable{
         
         
         this.drawNuclei();
+        this.drawCells();
         this.setChanged();
         this.notifyObservers();
         this.image.updateAndDraw();
+    }
+    
+    
+    /**
+     * Reset model for new image...
+     */
+    public void reset(){
+        this.nuclei.clear();
+        this.cells.clear();
+        this.points.clear();
+        this.results.reset();
+        
+        this.setChanged();
+        this.notifyObservers();
     }
     
 }

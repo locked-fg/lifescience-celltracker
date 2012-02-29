@@ -476,9 +476,19 @@
                           <Group type="102" alignment="1" attributes="1">
                               <Component id="jLabelDetectionInfo" pref="126" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jToggleButtonDetectionLabels" min="-2" pref="26" max="-2" attributes="1"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="jToggleButtonDetectionEdit" min="-2" pref="26" max="-2" attributes="1"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jToggleButtonDetectionComment" min="-2" pref="26" max="-2" attributes="1"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jToggleButtonDetectionLabels" min="-2" pref="26" max="-2" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jToggleButtonDetectionMarkers" min="-2" pref="26" max="-2" attributes="1"/>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <Component id="jToggleButtonDetectionEditNuclei" min="-2" pref="26" max="-2" attributes="1"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="jToggleButtonDetectionEditCells" min="-2" pref="26" max="-2" attributes="1"/>
+                                  </Group>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -495,14 +505,25 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jToggleButtonDetectionLabels" alignment="0" min="-2" max="-2" attributes="1"/>
-                          <Component id="jToggleButtonDetectionEdit" alignment="0" min="-2" max="-2" attributes="1"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                              <Component id="jLabelDetectionInfo" min="-2" pref="27" max="-2" attributes="0"/>
+                              <Component id="jLabelDetectionInfo" min="-2" pref="71" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jToggleButtonDetectionLabels" alignment="0" min="-2" max="-2" attributes="1"/>
+                                  <Component id="jToggleButtonDetectionMarkers" alignment="0" min="-2" max="-2" attributes="1"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jToggleButtonDetectionEditCells" alignment="0" min="-2" max="-2" attributes="1"/>
+                                  <Component id="jToggleButtonDetectionEditNuclei" alignment="0" min="-2" max="-2" attributes="1"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jToggleButtonDetectionComment" min="-2" max="-2" attributes="1"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="84" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -523,7 +544,7 @@
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-label.png"/>
                 </Property>
-                <Property name="toolTipText" type="java.lang.String" value="Show labels of nuclei."/>
+                <Property name="toolTipText" type="java.lang.String" value="Show labels"/>
                 <Property name="actionCommand" type="java.lang.String" value="Show Labels"/>
               </Properties>
               <AuxValues>
@@ -552,13 +573,50 @@
                 <Property name="actionCommand" type="java.lang.String" value="Show Table"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JToggleButton" name="jToggleButtonDetectionEdit">
+            <Component class="javax.swing.JToggleButton" name="jToggleButtonDetectionEditNuclei">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-edit.png"/>
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-editnuclei.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Edit detected nuclei."/>
                 <Property name="actionCommand" type="java.lang.String" value="Edit Nuclei"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonDetectionLabels.setSelected(true);"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JToggleButton" name="jToggleButtonDetectionMarkers">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-marker.png"/>
+                </Property>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="toolTipText" type="java.lang.String" value="Show markers"/>
+                <Property name="actionCommand" type="java.lang.String" value="Show Markers"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonDetectionLabels.setSelected(true);"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JToggleButton" name="jToggleButtonDetectionEditCells">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-editcells.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Edit detected cells."/>
+                <Property name="actionCommand" type="java.lang.String" value="Edit Cells"/>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonDetectionLabels.setSelected(true);"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JToggleButton" name="jToggleButtonDetectionComment">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-comment.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Add notes and comments to cells"/>
+                <Property name="actionCommand" type="java.lang.String" value="Comment"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodePost" type="java.lang.String" value="jToggleButtonDetectionLabels.setSelected(true);"/>

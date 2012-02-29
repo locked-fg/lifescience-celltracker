@@ -40,6 +40,9 @@ public class Cell {
     /** Daughter cells of this cell (coming from mitosis) */
     private ArrayList<Cell> offspring;
     
+    /** Comment or note about this cell */
+    private String comment;
+    
     
     
     //---------------- Constructor
@@ -81,6 +84,24 @@ public class Cell {
     public Nucleus[] getNuclei(){
         return this.nuclei;
     }
+    
+    /**
+     * Get comment about this cell
+     * @return String comment
+     */
+    public String getComment(){
+        return this.comment;
+    }
+    
+    
+    /**
+     * Set comment or note about this cell
+     * @param comment String
+     */
+    public void setComment(String comment){
+        this.comment = comment;
+    }
+    
     
     /**
      * Return frame at which mitosis started
@@ -155,6 +176,9 @@ public class Cell {
         }
         return null;
     }
+    
+    
+ 
     
     
 }
