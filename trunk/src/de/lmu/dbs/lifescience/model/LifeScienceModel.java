@@ -2,6 +2,7 @@ package de.lmu.dbs.lifescience.model;
 
 import de.lmu.dbs.lifescience.LifeScience;
 import ij.ImagePlus;
+import ij.ImageStack;
 import ij.gui.EllipseRoi;
 import ij.gui.ImageCanvas;
 import ij.gui.Line;
@@ -10,11 +11,15 @@ import ij.gui.Overlay;
 import ij.gui.PointRoi;
 import ij.gui.TextRoi;
 import ij.measure.Calibration;
+import ij.measure.ResultsTable;
+import ij.plugin.filter.AVI_Writer;
 import ij.plugin.filter.Analyzer;
 import ij.plugin.frame.RoiManager;
+import ij.process.ByteProcessor;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
@@ -66,9 +71,9 @@ public class LifeScienceModel extends Observable{
     private Status status;
     
     /**
-     * Table to show results
+     * Results Table for export
      */
-    private Analyzer table;
+    private ResultsTable results;
     
     /**
      * List of detected cells
@@ -99,19 +104,23 @@ public class LifeScienceModel extends Observable{
      * Constructor of Model - sets initial status
      */
     public LifeScienceModel() {
+        
         // set status
         this.status = LifeScienceModel.Status.START;
         
         // set cell collection
         this.roimanager = new RoiManager(true);
         
-        //set progress to 0 percent
+        // set progress to 0 percent
         this.status = LifeScienceModel.Status.START;
         
-        //set cell collection
+        // set cell collection
         this.cells = new ArrayList<>();
         this.nuclei = new ArrayList<>();
         this.points = new ArrayList<>();
+        
+        // set results table
+        this.results = new ResultsTable();
         
     }
     
@@ -211,24 +220,111 @@ public class LifeScienceModel extends Observable{
         return this.scalebar.getBounds().width;
     }
     
+    /*
+     * Fills the results table with current status and infos
+     */
+    public void setResults(){
+        // clear clear
+        this.results.reset();
+        this.results.incrementCounter();
+        
+        // fill results
+        if(this.cells.size()>0){
+            for(int i=0; i<this.cells.size(); i++){
+                Cell cell = this.cells.get(i);
+                this.results.addValue("Cell", i);
+                this.results.addValue("TrackStart", 1);
+                this.results.addValue("TrackEnd", this.image.getStackSize());
+                int ploidy = 2;
+                if(cell.isTetraploid()){
+                    ploidy = 4;
+                }
+                this.results.addValue("Ploidy", ploidy);
+                this.results.addValue("Fate", 0);
+                this.results.addValue("MitosisStart", cell.getTimeStartMitosis());
+                this.results.addValue("MitosisEnd", cell.getTimeEndMitosis());
+                this.results.addValue("Death", cell.getTimeDeath());
+                this.results.addLabel("Comment", "");
+                
+                // Increment results counter
+                this.results.incrementCounter();
+            }
+        }
+        this.results.addLabel("Comment", "Sequence: " + this.image.getFileInfo().fileName + " (" + this.image.getStackSize() + " Images)");
+    }
+    
     
     /**
-     * Export detected nuclei as csv
+     * Export detected cells as csv
      * @param path
      * @throws IOException 
      */
     public void exportCSV(String path) throws IOException{
-        //ResultsTable table = ResultsTable.getResultsTable();
-        if(this.table != null){
-            this.table.measure();
-        }else{
-            this.table = new Analyzer(this.image);
-            this.table.measure();
-        }
-        Analyzer.getResultsTable().saveAs(path);
+        // generate results
+        this.setResults();
+        
+        // save results
+        this.results.saveAs(path);
         
         // set status and notifyobservers
         this.status = LifeScienceModel.Status.EXPORTED;
+    }
+    
+    
+    /**
+     * Export detected cells as avi files (indices will be added)
+     * @param path 
+     * @throws IOException
+     */
+    public void exportAVI(String path) throws IOException{
+        // size of avi clip
+        int size = this.getNucleiDiameter() * 3;
+        
+    
+        
+        // foreach detected cell
+        for(int j=0; j<this.getCellCount(); j++){
+            // create new stack
+            ImageStack imagestack = new ImageStack(size, size);
+            for(int i=0; i<this.image.getStackSize(); i++){
+                Point cellcenter = this.cells.get(j).getCenter(i);
+                if(cellcenter != null){
+                    // set roi
+                    this.image.setSlice(i+1);
+                    this.image.killRoi();
+                    this.image.setRoi(new Rectangle(cellcenter.x-(size/2), cellcenter.y-(size/2), size, size));
+                    ByteProcessor clipprocessor = (ByteProcessor) this.image.getProcessor().crop();
+                    if(clipprocessor.getWidth() < size || clipprocessor.getHeight() < size){
+                        ByteProcessor newprocessor = new ByteProcessor(size, size);
+                        newprocessor.setBackgroundValue(0);
+                        int xoff = 0;
+                        int yoff = 0;
+                        if(cellcenter.x-(size/2)<0){
+                            xoff = Math.abs(cellcenter.x-(size/2));
+                        }
+                        if(cellcenter.y-(size/2)<0){
+                            yoff = Math.abs(cellcenter.y-(size/2));
+                        }
+                        for(int k=0; k<clipprocessor.getWidth(); k++){
+                            for(int l=0; l<clipprocessor.getHeight(); l++){
+                                newprocessor.putPixel(k+xoff, l+yoff, clipprocessor.getPixel(k, l));
+                            }
+                        }
+                        clipprocessor = newprocessor;
+                    }
+                    imagestack.addSlice("Label", clipprocessor);
+                }
+            }
+            this.image.killRoi();
+            ImagePlus imageclip = new ImagePlus("Clip", imagestack);
+            
+            // write avi
+            AVI_Writer writer = new AVI_Writer();
+            writer.writeImage(imageclip, path.replace(".avi", "-"+j+".avi"), AVI_Writer.JPEG_COMPRESSION, 80);
+            
+            // reset image
+            this.image.setSlice(1);
+        }
     }
     
     
@@ -349,15 +445,11 @@ public class LifeScienceModel extends Observable{
      * @param show 
      */
     public void showTable(boolean show){
-        if(this.table != null){
-            this.table.measure();
-            Analyzer.getResultsTable().show("Results");
-        }else{
-            this.table = new Analyzer(this.image);
-            this.table.measure();
-            this.table.getResultsTable().addValue("Cells", 10);
-            Analyzer.getResultsTable().show("Results");
-        }   
+        // set results
+        this.setResults();
+        
+        // show table
+        this.results.show("Results");
     }
     
     
@@ -494,16 +586,22 @@ public class LifeScienceModel extends Observable{
      * Set new ovalrois according to cells
      */
     public void drawCells(){
-        for (int i=0; i<this.cells.size(); i++){
-            Point p1 = this.cells.get(i).getNuclei()[0].getPoint(this.image.getCurrentSlice()-1);
-            Point p2 = this.cells.get(i).getNuclei()[1].getPoint(this.image.getCurrentSlice()-1);
-            int newx = p2.x + ((p1.x - p2.x) /2);
-            int newy = p2.y + ((p1.y - p2.y) /2);
-            newx = Math.min(p1.x, p2.x);
-            newy = Math.min(p1.y, p2.y);
-            EllipseRoi oval = new EllipseRoi((double) p1.x, (double) p1.y, (double) p2.x, (double) p2.y, 0.7);
-            oval.setPosition(this.image.getCurrentSlice());
-            this.overlay.add(oval);
+        // size of oval
+        int size = (int) (this.getNucleiDiameter()*1.5);
+        
+        for(int j=0; j<this.image.getStackSize(); j++){
+            for (int i=0; i<this.cells.size(); i++){
+                //Point p1 = this.cells.get(i).getNuclei()[0].getPoint(j);
+                //Point p2 = this.cells.get(i).getNuclei()[1].getPoint(j);
+                Point cell = this.cells.get(i).getCenter(j);
+                
+                if(cell !=null){
+                    //EllipseRoi oval = new EllipseRoi((double) p1.x, (double) p1.y, (double) p2.x, (double) p2.y, 0.7);
+                    OvalRoi oval = new OvalRoi(cell.x-(size/2), cell.y-(size/2), size, size);
+                    oval.setPosition(j+1);
+                    this.overlay.add(oval);
+                }
+            }
         }
     }
     

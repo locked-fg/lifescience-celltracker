@@ -92,8 +92,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 openDialog.setDialogTitle("TIF Sequenz laden...");
                 openDialog.setDialogType(JFileChooser.OPEN_DIALOG);
                 openDialog.setFileFilter(new FileNameExtensionFilter("TIF Sequenz", "tif", "tiff"));
-                int action = openDialog.showOpenDialog(view);
-                if(action == JFileChooser.APPROVE_OPTION){
+                if(openDialog.showOpenDialog(view) == JFileChooser.APPROVE_OPTION){
                     this.model.setImage(IJ.openImage(openDialog.getSelectedFile().getPath()));
                     // add Window listener to dock windows
                     this.model.getImage().getWindow().removeWindowListener(this.model.getImage().getWindow().getWindowListeners()[0]);
@@ -123,7 +122,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
-                CellTrackerRelate tracker = new CellTrackerRelate(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter()*4, 40, 4);
+                CellTrackerRelate tracker = new CellTrackerRelate(this.model.getImage(), this.model, this.detector, this.model.getNucleiDiameter()*3, 40, 4);
                 tracker.run();
                 
                 this.model.drawNuclei();
@@ -134,17 +133,32 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
             case "Export CSV":
                 // Open FileDialog...
                 JFileChooser saveDialog = new JFileChooser();
-                saveDialog.setDialogTitle("Export detected nuclei as CSV...");
+                saveDialog.setDialogTitle("Export detected cells as CSV...");
                 saveDialog.setDialogType(JFileChooser.SAVE_DIALOG);
-                saveDialog.setFileFilter(new FileNameExtensionFilter("CSV Tabelle", "csv"));
+                saveDialog.setFileFilter(new FileNameExtensionFilter("CSV table", "csv"));
                 saveDialog.setSelectedFile(new File("table.csv"));
-                int option = saveDialog.showSaveDialog(view);
-                if(option == JFileChooser.APPROVE_OPTION){
+                if(saveDialog.showSaveDialog(view) == JFileChooser.APPROVE_OPTION){
                     try {
                         this.model.exportCSV(saveDialog.getSelectedFile().getPath().toString());
                         this.model.setStatus(LifeScienceModel.Status.EXPORTED);
                     } catch (IOException ex) {
                         LifeScience.LOG.log(Level.WARNING, "CSV export failed: {0}", ex.getStackTrace().toString());
+                    }
+                }
+                break;
+            case "Export AVI":
+                // Open FileDialog...
+                JFileChooser saveAVIDialog = new JFileChooser();
+                saveAVIDialog.setDialogTitle("Export detected cells as AVI...");
+                saveAVIDialog.setDialogType(JFileChooser.SAVE_DIALOG);
+                saveAVIDialog.setFileFilter(new FileNameExtensionFilter("AVI video", "avi"));
+                saveAVIDialog.setSelectedFile(new File("sequence.avi"));
+                if(saveAVIDialog.showSaveDialog(view) == JFileChooser.APPROVE_OPTION){
+                    try {
+                        this.model.exportAVI(saveAVIDialog.getSelectedFile().getPath().toString());
+                        this.model.setStatus(LifeScienceModel.Status.EXPORTED);
+                    } catch (IOException ex) {
+                        LifeScience.LOG.log(Level.WARNING, "AVI export failed: {0}", ex.getStackTrace().toString());
                     }
                 }
                 break;

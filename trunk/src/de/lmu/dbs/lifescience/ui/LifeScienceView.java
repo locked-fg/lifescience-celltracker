@@ -51,13 +51,14 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jPanel1 = new javax.swing.JPanel();
         jButtonImport = new javax.swing.JButton();
         jButtonDetection = new javax.swing.JButton();
-        jButtonExport = new javax.swing.JButton();
+        jButtonExportCSV = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jButtonTracking = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jButtonEnhancement = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
+        jButtonExportAVI = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanelSequence = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
@@ -88,7 +89,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), "Steps", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 12), java.awt.Color.lightGray)); // NOI18N
         jPanel1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        jPanel1.setFont(new java.awt.Font("Verdana", 0, 11)); // NOI18N
+        jPanel1.setFont(new java.awt.Font("Verdana", 0, 11));
         jPanel1.setPreferredSize(new java.awt.Dimension(160, (int) GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds().getHeight()));
 
         jButtonImport.setFont(new java.awt.Font("Tahoma", 1, 11));
@@ -105,12 +106,12 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jButtonDetection.setMaximumSize(new java.awt.Dimension(83, 23));
         jButtonDetection.setMinimumSize(new java.awt.Dimension(83, 23));
 
-        jButtonExport.setFont(new java.awt.Font("Tahoma", 1, 11));
-        jButtonExport.setForeground(new java.awt.Color(33, 90, 167));
-        jButtonExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-export.png"))); // NOI18N
-        jButtonExport.setToolTipText("Export detected cells as csv...");
-        jButtonExport.setEnabled(false);
-        jButtonExport.setLabel("Export CSV");
+        jButtonExportCSV.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButtonExportCSV.setForeground(new java.awt.Color(33, 90, 167));
+        jButtonExportCSV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-export.png"))); // NOI18N
+        jButtonExportCSV.setToolTipText("Export detected cells as csv...");
+        jButtonExportCSV.setEnabled(false);
+        jButtonExportCSV.setLabel("Export CSV");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-spacer.png"))); // NOI18N
@@ -140,6 +141,13 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-spacer.png"))); // NOI18N
 
+        jButtonExportAVI.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButtonExportAVI.setForeground(new java.awt.Color(33, 90, 167));
+        jButtonExportAVI.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-avi.png"))); // NOI18N
+        jButtonExportAVI.setText("Export AVI");
+        jButtonExportAVI.setToolTipText("Create AVI film for each detected cell...");
+        jButtonExportAVI.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -148,14 +156,15 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonImport, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                     .addComponent(jButtonEnhancement, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                     .addComponent(jButtonDetection, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
                     .addComponent(jButtonTracking, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                    .addComponent(jButtonExport, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jButtonExportCSV, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jButtonExportAVI, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -163,9 +172,9 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addComponent(jButtonImport, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(13, 13, 13)
                 .addComponent(jButtonEnhancement, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel5)
@@ -175,11 +184,13 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonTracking, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButtonExport, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(172, Short.MAX_VALUE))
+                .addGap(13, 13, 13)
+                .addComponent(jButtonExportCSV, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonExportAVI, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(103, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true), "Info", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Verdana", 1, 12), java.awt.Color.lightGray)); // NOI18N
@@ -437,7 +448,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton jButtonDetection;
     private javax.swing.JButton jButtonDetectionTable;
     private javax.swing.JButton jButtonEnhancement;
-    private javax.swing.JButton jButtonExport;
+    private javax.swing.JButton jButtonExportAVI;
+    private javax.swing.JButton jButtonExportCSV;
     private javax.swing.JButton jButtonImport;
     private javax.swing.JButton jButtonSequenceNext;
     private javax.swing.JButton jButtonSequencePrev;
@@ -474,7 +486,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
     public void initController(ActionListener controller){        
         this.jButtonImport.addActionListener(controller);
         this.jButtonDetection.addActionListener(controller);
-        this.jButtonExport.addActionListener(controller);
+        this.jButtonExportCSV.addActionListener(controller);
+        this.jButtonExportAVI.addActionListener(controller);
         this.jToggleButtonSequenceWindow.addActionListener(controller);
         this.jButtonSequenceNext.addActionListener(controller);
         this.jButtonSequencePrev.addActionListener(controller);
@@ -553,7 +566,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             this.jButtonDetection.setEnabled(true);
             this.jButtonEnhancement.setEnabled(true);
             // reset buttons
-            this.jButtonExport.setEnabled(false);
+            this.jButtonExportCSV.setEnabled(false);
+            this.jButtonExportAVI.setEnabled(false);
             this.jButtonTracking.setEnabled(false);
             this.jPanelDetection.setVisible(false);
             this.jPanelExport.setVisible(false);
@@ -564,7 +578,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             model.getImage().getOverlay().get(0).setStrokeColor(new Color(0, 166, 151));
             // update buttons
             this.jButtonDetection.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
-            this.jButtonExport.setEnabled(true);
+            this.jButtonExportCSV.setEnabled(true);
+            this.jButtonExportAVI.setEnabled(true);
             this.jButtonTracking.setEnabled(true);
             // update info
             this.jLabelDetectionInfo.setText(model.getDetectionInfoString());
@@ -574,7 +589,8 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
             this.jButtonTracking.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
         }else if(model.getStatus() == LifeScienceModel.Status.EXPORTED){
             // update buttons
-            this.jButtonExport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
+            this.jButtonExportCSV.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
+            this.jButtonExportAVI.setIcon(new javax.swing.ImageIcon(getClass().getResource("/de/lmu/dbs/lifescience/resources/lifescience-icon-check.png")));
         }
         // update window buttons
         this.jToggleButtonSequenceWindow.setSelected(model.getImage().getWindow().isShowing());

@@ -92,14 +92,15 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jButtonImport" alignment="0" pref="156" max="32767" attributes="1"/>
-                      <Component id="jLabel2" alignment="0" pref="156" max="32767" attributes="0"/>
                       <Component id="jButtonEnhancement" alignment="0" pref="156" max="32767" attributes="1"/>
                       <Component id="jLabel5" alignment="0" pref="156" max="32767" attributes="0"/>
                       <Component id="jButtonDetection" alignment="0" pref="156" max="32767" attributes="1"/>
                       <Component id="jLabel4" alignment="0" pref="156" max="32767" attributes="0"/>
                       <Component id="jButtonTracking" alignment="0" pref="156" max="32767" attributes="1"/>
+                      <Component id="jLabel2" alignment="0" pref="156" max="32767" attributes="0"/>
+                      <Component id="jButtonExportCSV" alignment="0" pref="156" max="32767" attributes="1"/>
+                      <Component id="jButtonExportAVI" alignment="0" pref="156" max="32767" attributes="1"/>
                       <Component id="jLabel3" alignment="0" pref="156" max="32767" attributes="0"/>
-                      <Component id="jButtonExport" alignment="0" pref="156" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -110,9 +111,9 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   <Component id="jButtonImport" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
                   <Component id="jButtonEnhancement" min="-2" pref="34" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
@@ -122,11 +123,13 @@
                   <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButtonTracking" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jButtonExport" min="-2" pref="34" max="-2" attributes="0"/>
-                  <EmptySpace pref="172" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                  <Component id="jButtonExportCSV" min="-2" pref="34" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="jButtonExportAVI" min="-2" pref="34" max="-2" attributes="0"/>
+                  <EmptySpace pref="103" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -166,7 +169,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="jButtonExport">
+        <Component class="javax.swing.JButton" name="jButtonExportCSV">
           <Properties>
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Tahoma" size="11" style="1"/>
@@ -250,6 +253,22 @@
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-spacer.png"/>
             </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButtonExportAVI">
+          <Properties>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Tahoma" size="11" style="1"/>
+            </Property>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="a7" green="5a" red="21" type="rgb"/>
+            </Property>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/de/lmu/dbs/lifescience/resources/lifescience-icon-avi.png"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Export AVI"/>
+            <Property name="toolTipText" type="java.lang.String" value="Create AVI film for each detected cell..."/>
+            <Property name="enabled" type="boolean" value="false"/>
           </Properties>
         </Component>
       </SubComponents>

@@ -1,5 +1,6 @@
 package de.lmu.dbs.lifescience.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 
@@ -81,6 +82,29 @@ public class Cell {
         return this.nuclei;
     }
     
+    /**
+     * Return frame at which mitosis started
+     * @return frame number
+     */
+    public int getTimeEndMitosis(){
+        return this.timeMitosisEnd+1;
+    }
+    
+    /**
+     * Return frame at which mitosis started
+     * @return frame number
+     */
+    public int getTimeStartMitosis(){
+        return this.timeMitosisStart+1;
+    }
+    
+    /**
+     * Get the frame index at which cell died
+     * @return timeDeath
+     */
+    public int getTimeDeath(){
+        return this.timeDeath+1;
+    }
     
     /**
      * Determine wether cell is tetraploid (2 nuclei, 4 chromosome sets)
@@ -90,6 +114,47 @@ public class Cell {
         return this.tetraploid;
     }
     
+    /**
+     * Calculates and returns the center of the cell at the specified frame position
+     * @param index Frame indexs
+     * @return Point Center or null if no nuclei set for specified frame
+     */
+    public Point getCenter(int index){
+        Point p1 = this.nuclei[0].getPoint(index);
+        Point p2 = this.nuclei[1].getPoint(index);
+                
+        if(p1!=null && p2 !=null){
+            int newx = p2.x + ((p1.x - p2.x) /2);
+            int newy = p2.y + ((p1.y - p2.y) /2);
+            
+            return new Point(newx, newy);
+        }else if(p1 != null){
+            return p1;
+        }else if(p2 != null){
+            return p2;
+        }
+      
+        return null;
+    }
+    
+    
+     /**
+     * Calculates and returns the top left corner of the cell's bounding box at the specified frame position
+     * @param index Frame indexs
+     * @return Point Top left or null if no nuclei set for specified frame
+     */
+    public Point getTopLeftCorner(int index){
+        Point p1 = this.nuclei[0].getPoint(index);
+        Point p2 = this.nuclei[1].getPoint(index);
+                
+        if(p1!=null && p2 !=null){
+            int newx = Math.min(p1.x, p2.x);
+            int newy = Math.min(p1.y, p2.y);
+            
+            return new Point(newx, newy);
+        }
+        return null;
+    }
     
     
 }
