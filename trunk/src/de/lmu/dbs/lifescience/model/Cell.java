@@ -77,6 +77,15 @@ public class Cell {
         return false; 
     }
     
+    /*
+     * Remove second nucleus from cell and set cell as non tetraploid
+     */
+    public void removeNucleus(){
+        this.nuclei[1].setCell(null);
+        this.nuclei[1]=null;
+        this.tetraploid = false;
+    }
+    
     /**
      * Get nuclei that belong to this cell
      * @return array of nuclei
@@ -142,6 +151,9 @@ public class Cell {
      */
     public Point getCenter(int index){
         Point p1 = this.nuclei[0].getPoint(index);
+        if(this.nuclei[1]==null){
+            return p1;
+        }
         Point p2 = this.nuclei[1].getPoint(index);
                 
         if(p1!=null && p2 !=null){

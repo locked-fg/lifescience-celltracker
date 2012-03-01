@@ -115,4 +115,24 @@ public class CellDetector extends Processor {
             }
         }
     }
+    
+    /**
+     * Evaluate grouping of nuclei over whole sequence.
+     * Break up grouping if nuclei wander apart.
+     */
+    public void evaluateGrouping(){
+        for(int i=0; i<this.model.getCellCount(); i++){
+            for(int j=0; j<this.image.getStackSize(); j++){
+                Nucleus[] nucs = this.model.getCell(i).getNuclei();
+                if(this.model.getCell(i).isTetraploid() &&
+                    nucs[0].getPoint(j)!=null && nucs[1].getPoint(j)!=null){
+                    // calculate euclidean distance and delete second nucleus if necessary
+                    double euclid = Math.sqrt(Math.pow((nucs[0].getPoint(j).x - nucs[1].getPoint(j).x), 2.0) + Math.pow((nucs[0].getPoint(j).y - nucs[1].getPoint(j).y), 2.0));
+                    if(euclid > this.model.getNucleiDiameter()*2){
+                        this.model.getCell(i).removeNucleus();
+                    }
+                }
+            }
+        }
+    }
 }

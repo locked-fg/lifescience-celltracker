@@ -1,6 +1,7 @@
 package de.lmu.dbs.lifescience.processing;
 
 import de.lmu.dbs.lifescience.LifeScience;
+import de.lmu.dbs.lifescience.model.Cell;
 import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import de.lmu.dbs.lifescience.model.Nucleus;
 import ij.ImagePlus;
@@ -56,7 +57,7 @@ public class CellTrackerRelate extends Processor {
         this.model = model;
         this.detector = detector;
         this.maxDistanceDiff = maxDistanceDiff;
-        this.maxIntesityDiff = maxIntesityDiff;
+        this.maxIntesityDiff = maxIntensityDiff;
         this.k = k;
     }
     
@@ -95,27 +96,35 @@ public class CellTrackerRelate extends Processor {
                 
                 // Test for matching intensity
                 boolean matchfound = false;
-                
-                // Test all nearest neighbors until match found
-                for(int j=0; j<kNN.length; j++){
-                    // TODO - kNN only returns one neighbor - LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
-                    if(kNN[j] != null){
-                        //LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
-                        
-                        Nucleus oldnuc = this.model.getNucleus(kNN[j]);
-                        Point oldpoi = oldnuc.getPoint(i-1);
+                int found = this.findMatch(kNN, newpoi, i); 
+                if(found<this.model.getNucleiCount()){
+                    matchfound = true;
+                    this.model.getNucleus(found).setPoint(newpoi, i);
 
-                        // Select point if intensity does not variate to much
-                        if(Math.abs(this.image.getPixel(oldpoi.x, oldpoi.y)[0]-this.image.getPixel(newpoi.x, newpoi.y)[0])<this.maxIntesityDiff){
-                            oldnuc.setPoint(newpoi, i);
-                            matchfound = true;
-                            break;
-                        }
-                    }  
                 }
+                
+                
                 // TODO do something if no match found
                 // if no match found create new nucleus ---> to be related yet
+                // go through previous images and search for match
                 if(!matchfound && kNN[0]!= null){
+                   /* for(int o=i-1; o>0; o--){
+                        // Get potential matches in old pointset (get k nearest neighbor points)
+                        Integer[] kNNN = this.model.getkNearestNuclei(this.k, newpoi.x, newpoi.y, o, this.maxDistanceDiff);
+                        int found = this.findMatch(kNNN, newpoi, o);
+                        if(found < this.model.getNucleiCount()){
+                            //interpolate
+                            /*for(int p=o; p<i; p++){
+                                LifeScience.LOG.info(""+p);
+                                this.model.getNucleus(found).setPoint(newpoi, p);
+                                
+                            }
+                                
+                            LifeScience.LOG.info("FOUND" + found);
+                            
+                            break;
+                        }
+                    }*/
                     this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
                 }
                 
@@ -125,8 +134,54 @@ public class CellTrackerRelate extends Processor {
 
         }
         
+        // evaluate grouping
+        this.detector.evaluateGrouping();
+        
+        // relate cells
+        this.markNuclei();
         
         // update image
         this.image.updateAndDraw();
     }
+    
+    /**
+     * Find Match for Point p at index in kNearestNeighborArray kNN
+     * @param kNN
+     * @param newpoi
+     * @param index
+     * @return true if match found
+     */
+    public int findMatch(Integer[] kNN, Point newpoi, int index){
+                
+         // Test all nearest neighbors until match found
+         for(int j=0; j<kNN.length; j++){
+             // TODO - kNN only returns one neighbor - LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
+             if(kNN[j] != null){
+                //LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
+                        
+                Nucleus oldnuc = this.model.getNucleus(kNN[j]);
+                Point oldpoi = oldnuc.getPoint(index-1);
+
+                // Select point if intensity does not variate to much
+                if(Math.abs(this.image.getPixel(oldpoi.x, oldpoi.y)[0]-this.image.getPixel(newpoi.x, newpoi.y)[0])<this.maxIntesityDiff){
+                    return kNN[j];
+                }
+             }
+          }
+          return this.model.getNucleiCount()+1;
+    }
+    
+    /**
+     * Relate each nucleus which has been tracked until last slice and has no cell yet with a new cell.
+     */
+    public void markNuclei(){
+        for(int i=0; i<this.model.getNucleiCount(); i++){
+            Nucleus nuc = this.model.getNucleus(i);
+            if(nuc.getPoint(this.image.getStackSize()-1) !=null && nuc.getCell()==null){
+                this.model.addCell(new Cell(nuc));
+            }
+        }
+    }
+    
+    
 }

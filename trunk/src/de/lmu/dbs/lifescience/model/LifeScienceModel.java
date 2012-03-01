@@ -240,6 +240,10 @@ public class LifeScienceModel extends Observable{
                     ploidy = 4;
                 }
                 this.results.addValue("Ploidy", ploidy);
+                if(cell.getNuclei()[0].getPoint(0)!=null){
+                    this.results.addValue("Position-X", cell.getNuclei()[0].getPoint(0).x);
+                    this.results.addValue("Position-Y", cell.getNuclei()[0].getPoint(0).y);
+                }
                 this.results.addValue("Fate", 0);
                 this.results.addValue("MitosisStart", cell.getTimeStartMitosis());
                 this.results.addValue("MitosisEnd", cell.getTimeEndMitosis());
@@ -279,8 +283,6 @@ public class LifeScienceModel extends Observable{
     public void exportAVI(String path) throws IOException{
         // size of avi clip
         int size = this.getNucleiDiameter() * 3;
-        
-    
         
         // foreach detected cell
         for(int j=0; j<this.getCellCount(); j++){
@@ -347,6 +349,15 @@ public class LifeScienceModel extends Observable{
      */
     public void addCell(Cell cell){
         this.cells.add(cell);
+    }
+    
+    /**
+     * Return cell at indes
+     * @param index
+     * @return Cell
+     */
+    public Cell getCell(int index){
+        return this.cells.get(index);
     }
     
     
@@ -430,11 +441,12 @@ public class LifeScienceModel extends Observable{
     public void showLabels(boolean show){
         //this.overlay.drawLabels(show);
         this.overlay.drawNames(show);
-        this.overlay.setLabelColor(Color.yellow);
+        this.overlay.setLabelColor(Color.red);
+        this.overlay.setLabelFont(new Font("Verdana", Font.BOLD, 12));
         for(int i=0; i<this.overlay.size(); i++){
             if(this.overlay.get(i) instanceof PointRoi){
                 PointRoi roi = (PointRoi) this.overlay.get(i);
-                roi.setHideLabels(!show);
+                roi.setHideLabels(true);
             }else if(this.overlay.get(i) instanceof OvalRoi){
                 // no function yet
             }else{
@@ -569,7 +581,7 @@ public class LifeScienceModel extends Observable{
             }
             
         }
-        LifeScience.LOG.info("Treemap: " + nucs.toString());
+        //LifeScience.LOG.info("Treemap: " + nucs.toString());
         return (Integer[]) nucs.values().toArray(new Integer[k]);
     }
     
@@ -638,6 +650,9 @@ public class LifeScienceModel extends Observable{
                     //EllipseRoi oval = new EllipseRoi((double) p1.x, (double) p1.y, (double) p2.x, (double) p2.y, 0.7);
                     OvalRoi oval = new OvalRoi(cell.x-(size/2), cell.y-(size/2), size, size);
                     oval.setName("" + i);
+                    if(this.cells.get(i).isTetraploid()){
+                        oval.setStrokeColor(Color.red);
+                    }
                     oval.setPosition(j+1);
                     this.overlay.add(oval);
                 }
