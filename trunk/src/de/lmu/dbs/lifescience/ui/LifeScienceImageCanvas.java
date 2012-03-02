@@ -78,7 +78,10 @@ public class LifeScienceImageCanvas extends ImageCanvas implements Serializable{
         return false;
     }
     
-    
+    /**
+     * Set new image
+     * @param path 
+     */
     public void setNewImage(String path){
         // Open new ImageJ
         ImagePlus img = new ImagePlus(path);
@@ -92,6 +95,7 @@ public class LifeScienceImageCanvas extends ImageCanvas implements Serializable{
     /**
      * Resize Image in Canvas to specified width
      * @param width 
+     * @param height
      */
     public void setImageSize(int width, int height){
         this.dstHeight = height;
@@ -129,7 +133,10 @@ public class LifeScienceImageCanvas extends ImageCanvas implements Serializable{
     }
     
     
-    /** Enlarge the canvas if the user enlarges the window. */
+    /** Enlarge the canvas if the user enlarges the window.
+     * @param width 
+     * @param height 
+     */
 	public void resizeCanvas(int width, int height) {
 		
 		if (IJ.altKeyDown())

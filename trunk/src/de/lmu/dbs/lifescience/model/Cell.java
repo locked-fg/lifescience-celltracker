@@ -77,7 +77,7 @@ public class Cell {
         return false; 
     }
     
-    /*
+    /**
      * Remove second nucleus from cell and set cell as non tetraploid
      */
     public void removeNucleus(){

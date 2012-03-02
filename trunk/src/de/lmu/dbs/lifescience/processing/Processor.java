@@ -17,7 +17,10 @@ public abstract class Processor {
     
     
     //---------------- Constructor
-    
+    /**
+     * Setup processor
+     * @param image 
+     */
     public Processor(ImagePlus image) {
         this.image = image;
     }

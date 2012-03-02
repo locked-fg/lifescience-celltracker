@@ -27,6 +27,11 @@ public class CellDetector extends Processor {
     
     //---------------- Constructor
     
+    /**
+     * Set up detection of nuclei and group
+     * @param image
+     * @param model 
+     */
     public CellDetector(ImagePlus image, LifeScienceModel model) {
         super(image);
         this.model = model;

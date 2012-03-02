@@ -60,23 +60,45 @@ public class Nucleus {
     
     
     //---------------- Methods
-    
+    /**
+     * Get point at position index
+     * @param index
+     * @return Point
+     */
     public Point getPoint(int index){
         return this.points[index];
     }
     
+    /**
+     * Return cell of this nucleus
+     * @return Cell
+     */
     public Cell getCell(){
         return this.cell;
     }
     
+    /**
+     * Set cell vor this Nucleus
+     * This method is only needed by the Cell class to add a nucleus
+     * @param cell 
+     */
     protected void setCell(Cell cell){
         this.cell = cell;
     }
     
+    /**
+     * Set point at index
+     * @param p Point
+     * @param index 
+     */
     public void setPoint(Point p, int index){
         this.points[index] = p;
     }
     
+    /**
+     * Return true if this Nucleus is assigned to a cell
+     * @return true if assigned
+     */
     public boolean isAssigned(){
         if(this.cell != null){
             return true;

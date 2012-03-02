@@ -12,6 +12,9 @@ public class LifeScienceProgressBar extends ProgressBar implements Serializable 
 
     //---------------- Attributes
     //---------------- Constructor
+    /**
+     * Create new Progress Bar as Java Beans
+     */
     public LifeScienceProgressBar() {
         super(410, 15);
     }

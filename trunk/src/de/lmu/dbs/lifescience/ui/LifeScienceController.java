@@ -46,7 +46,10 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     
     /** Edit Mode */
     public static enum Mode {
-        EDIT, VIEW
+        /** Edit mode  */
+        EDIT, 
+        /** View mode  */
+        VIEW
     }
     
     
@@ -69,6 +72,11 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
     
     
     //---------------- Controller
+    /**
+     * Set up controller and link model and view
+     * @param model
+     * @param view 
+     */
     public LifeScienceController(LifeScienceModel model, LifeScienceView view){
         this.model = model;
         this.view = view;

@@ -34,7 +34,19 @@ public class LifeScienceModel extends Observable{
     //---------------- Constants
     /** Image status */
     public static enum Status {
-        START, IMAGEREADY, IMAGEENHANCED, CELLSDETECTED, CELLSTRACKED, EXPORTED
+
+        /** Start of program  */
+        START,
+        /** Image was successfully loaded */
+        IMAGEREADY,
+        /** Image enhancement done   */
+        IMAGEENHANCED,
+        /** Cell detection complete  */
+        CELLSDETECTED,
+        /** Cell tracking complete  */
+        CELLSTRACKED,
+        /** CSV or AVI export done    */
+        EXPORTED
     }
     
     
@@ -220,7 +232,7 @@ public class LifeScienceModel extends Observable{
         return this.scalebar.getBounds().width;
     }
     
-    /*
+    /**
      * Fills the results table with current status and infos
      */
     public void setResults(){
@@ -329,7 +341,10 @@ public class LifeScienceModel extends Observable{
         }
     }
     
-    
+    /**
+     * Get Canvas element of activeimage
+     * @return Canvas
+     */
     public ImageCanvas getCanvas(){
         return this.image.getCanvas();
     }
@@ -363,7 +378,7 @@ public class LifeScienceModel extends Observable{
     
     /**
      * Set nuclei
-     * @param nuclei 
+     * @param nucleus 
      */
     public void addNucleus(Nucleus nucleus){
         this.nuclei.add(nucleus);
@@ -378,18 +393,34 @@ public class LifeScienceModel extends Observable{
         this.points.add(point);
     }
     
+    /**
+     * Return point at position index
+     * @param index
+     * @return Point
+     */
     public Point getPoint(int index){
         return this.points.get(index);
     }
     
+    /**
+     * Get number of Points
+     * @return int size of pointdump
+     */
     public int getPointCount(){
         return this.points.size();
     }
     
+    /**
+     * Reset point dump
+     */
     public void clearPoints(){
         this.points.clear();
     }
     
+    /**
+     * Get ImagePlus of active Image
+     * @return ImagePlus
+     */
     public ImagePlus getImage(){
         return this.image;
     }
