@@ -1,6 +1,7 @@
 package de.lmu.dbs.lifescience.processing;
 
 import de.lmu.dbs.lifescience.LifeScience;
+import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import ij.ImagePlus;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.filter.BackgroundSubtracter;
@@ -21,6 +22,9 @@ public class ImageEnhancer extends Processor {
     /** Quick version of enhancing (not as thorough) */
     private boolean quickEnhance;
     
+    /** Image to perform enhancement on  */
+    ImagePlus image;
+    
     
     
     
@@ -30,8 +34,9 @@ public class ImageEnhancer extends Processor {
      * @param image ImagePlus that should be enhanced
      * @param quickEnhance True if quick version of enhancment is to be used
      */
-    public ImageEnhancer(ImagePlus image, boolean quickEnhance) {
-        super(image);
+    public ImageEnhancer(LifeScienceModel model, boolean quickEnhance) {
+        super(model);
+        this.image = this.model.getImage();
         this.quickEnhance = quickEnhance;
     }
     
@@ -55,7 +60,7 @@ public class ImageEnhancer extends Processor {
             this.image.setSliceWithoutUpdate(i);
             filter.rank(process, 4, RankFilters.MEDIAN);
             if(!this.quickEnhance){
-                substract.rollingBallBackground(process, 20, false, false, false, true, true);
+                substract.rollingBallBackground(process, this.model.getNucleiDiameter()/2, false, false, false, true, true);
             }
         }
         //reset slice

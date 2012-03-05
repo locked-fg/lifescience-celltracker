@@ -1,6 +1,7 @@
 package de.lmu.dbs.lifescience.processing;
 
 import de.lmu.dbs.lifescience.LifeScience;
+import de.lmu.dbs.lifescience.model.LifeScienceModel;
 import ij.ImagePlus;
 
 
@@ -12,7 +13,7 @@ public abstract class Processor {
 
     //---------------- Attributes
     /** Imageplus that should be processed */
-    protected ImagePlus image;
+    protected LifeScienceModel model;
     
     
     
@@ -21,8 +22,8 @@ public abstract class Processor {
      * Setup processor
      * @param image 
      */
-    public Processor(ImagePlus image) {
-        this.image = image;
+    public Processor(LifeScienceModel model) {
+        this.model = model;
     }
     
     

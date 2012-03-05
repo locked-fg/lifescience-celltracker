@@ -22,7 +22,7 @@ public class CellTrackerFollow extends Processor {
     int intesityVar = 10;
     
     /** Model    */
-    LifeScienceModel model;
+    ImagePlus image;
     
     /** Cell Detector */
     CellDetector detector;
@@ -41,9 +41,9 @@ public class CellTrackerFollow extends Processor {
      * @param detector CellDetector Class
      * @param maxDistance 
      */
-    public CellTrackerFollow(ImagePlus image, LifeScienceModel model, CellDetector detector, int maxDistance) {
-        super(image);
-        this.model = model;
+    public CellTrackerFollow(LifeScienceModel model, CellDetector detector, int maxDistance) {
+        super(model);
+        this.image = this.model.getImage();
         this.detector = detector;
         this.maxDistance = maxDistance;
     }

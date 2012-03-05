@@ -115,12 +115,12 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 }
                 break;
             case "Enhance Images":
-                ImageEnhancer enhancer = new ImageEnhancer(model.getImage(), true);
+                ImageEnhancer enhancer = new ImageEnhancer(this.model, false);
                 enhancer.run();
                 this.model.setStatus(LifeScienceModel.Status.IMAGEENHANCED);
                 break;
             case "Detect Cells":
-                this.detector = new CellDetector(model.getImage(), this.model);
+                this.detector = new CellDetector(this.model);
                 detector.run();
                 detector.groupNuclei();
                 // change mouselistener of image window
@@ -135,7 +135,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
-                CellTrackerRelate tracker = new CellTrackerRelate(this.model.getImage(), this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 40, 4);
+                CellTrackerRelate tracker = new CellTrackerRelate(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 40, 4);
                 tracker.run();
                 
                 this.model.drawNuclei();

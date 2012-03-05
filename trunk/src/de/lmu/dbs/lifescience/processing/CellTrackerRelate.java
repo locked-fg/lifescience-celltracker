@@ -25,7 +25,7 @@ public class CellTrackerRelate extends Processor {
     int k = 1;
     
     /** Model    */
-    LifeScienceModel model;
+    ImagePlus image;
     
     /** Cell Detector */
     CellDetector detector;
@@ -52,9 +52,9 @@ public class CellTrackerRelate extends Processor {
      * @param maxIntensityDiff Maximal difference in intensity that can occur from one blob to corresponing blob in next slice
      * @param k Size of resultset from nearest-neighbor-search of blobs
      */
-    public CellTrackerRelate(ImagePlus image, LifeScienceModel model, CellDetector detector, int maxDistanceDiff, int maxIntensityDiff, int k) {
-        super(image);
-        this.model = model;
+    public CellTrackerRelate(LifeScienceModel model, CellDetector detector, int maxDistanceDiff, int maxIntensityDiff, int k) {
+        super(model);
+        this.image = this.model.getImage();
         this.detector = detector;
         this.maxDistanceDiff = maxDistanceDiff;
         this.maxIntesityDiff = maxIntensityDiff;

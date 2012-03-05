@@ -22,7 +22,7 @@ public class CellDetector extends Processor {
 
     //---------------- Attributes
     /** Model */
-    LifeScienceModel model;
+    ImagePlus image;
     
     
     //---------------- Constructor
@@ -32,9 +32,9 @@ public class CellDetector extends Processor {
      * @param image
      * @param model 
      */
-    public CellDetector(ImagePlus image, LifeScienceModel model) {
-        super(image);
-        this.model = model;
+    public CellDetector(LifeScienceModel model) {
+        super(model);
+        this.image = model.getImage();
     }
     
     
