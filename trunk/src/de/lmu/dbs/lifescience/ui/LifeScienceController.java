@@ -115,7 +115,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 }
                 break;
             case "Enhance Images":
-                ImageEnhancer enhancer = new ImageEnhancer(this.model, false);
+                ImageEnhancer enhancer = new ImageEnhancer(this.model, true);
                 enhancer.run();
                 this.model.setStatus(LifeScienceModel.Status.IMAGEENHANCED);
                 break;
@@ -135,6 +135,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.CELLSDETECTED);
                 break;
             case "Track Cells":
+                // rolling ball 30 else 40
                 CellTrackerRelate tracker = new CellTrackerRelate(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 40, 4);
                 tracker.run();
                 

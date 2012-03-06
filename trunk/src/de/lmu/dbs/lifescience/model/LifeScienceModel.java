@@ -220,9 +220,26 @@ public class LifeScienceModel extends Observable{
         
         info += this.getNucleiCount() + " nuclei found <br><br>";
         info += this.getCellCount() + " cells found <br><br>";
+        info += this.countTetraploids() + " tetraploids found <br><br>";
         info += "</html>";
         return info;
     }
+    
+    
+    /**
+     * Number of tetraploid cells
+     * @return int
+     */
+    public int countTetraploids(){
+        int count = 0;
+        for(int i=0; i<this.cells.size(); i++){
+            if(this.cells.get(i).isTetraploid()){
+                count++;
+            }
+        }
+        return count;
+    }
+    
     
     /**
      * Get the average diameter of cells

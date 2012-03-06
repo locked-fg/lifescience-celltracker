@@ -291,7 +291,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jToggleButtonDetectionLabels.setToolTipText("Show labels");
         jToggleButtonDetectionLabels.setActionCommand("Show Labels");
 
-        jLabelDetectionInfo.setFont(new java.awt.Font("Arial", 0, 12));
+        jLabelDetectionInfo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabelDetectionInfo.setForeground(new java.awt.Color(89, 97, 107));
         jLabelDetectionInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelDetectionInfo.setToolTipText("");
@@ -354,9 +354,6 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelDetectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelDetectionLayout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabelDetectionInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelDetectionLayout.createSequentialGroup()
                         .addGroup(jPanelDetectionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jToggleButtonDetectionLabels)
                             .addComponent(jToggleButtonDetectionMarkers))
@@ -365,8 +362,11 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                             .addComponent(jToggleButtonDetectionEditCells)
                             .addComponent(jToggleButtonDetectionEditNuclei))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jToggleButtonDetectionComment)))
-                .addGap(26, 26, 26))
+                        .addComponent(jToggleButtonDetectionComment))
+                    .addGroup(jPanelDetectionLayout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(jLabelDetectionInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         jLabel12.setForeground(new java.awt.Color(153, 153, 153));
@@ -387,10 +387,10 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addContainerGap()
                 .addGroup(jPanelExportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelExportLayout.createSequentialGroup()
-                        .addComponent(jLabelExportInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                        .addComponent(jLabelExportInfo, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(jPanelExportLayout.createSequentialGroup()
-                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)
                         .addGap(92, 92, 92))))
         );
         jPanelExportLayout.setVerticalGroup(
@@ -408,8 +408,10 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanelSequence, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jPanelExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
             .addComponent(jPanelDetection, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanelExport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -418,9 +420,9 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
                 .addComponent(jPanelSequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelDetection, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanelExport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(156, Short.MAX_VALUE))
+                .addContainerGap(115, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

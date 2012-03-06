@@ -107,24 +107,26 @@ public class CellTrackerRelate extends Processor {
                 // TODO do something if no match found
                 // if no match found create new nucleus ---> to be related yet
                 // go through previous images and search for match
-                if(!matchfound && kNN[0]!= null){
-                   /* for(int o=i-1; o>0; o--){
+                if(!matchfound){
+                    for(int o=i-1; o>0; o--){
+                        this.image.setSlice(o+1);
                         // Get potential matches in old pointset (get k nearest neighbor points)
-                        Integer[] kNNN = this.model.getkNearestNuclei(this.k, newpoi.x, newpoi.y, o, this.maxDistanceDiff);
-                        int found = this.findMatch(kNNN, newpoi, o);
-                        if(found < this.model.getNucleiCount()){
+                        Integer[] kNNN = this.model.getkNearestNuclei(this.k, newpoi.x, newpoi.y, o-1, this.maxDistanceDiff);
+                        int foundd = this.findMatch(kNNN, newpoi, o);
+                        if(foundd < this.model.getNucleiCount()){
                             //interpolate
-                            /*for(int p=o; p<i; p++){
+                            for(int p=o; p<i; p++){
                                 LifeScience.LOG.info(""+p);
-                                this.model.getNucleus(found).setPoint(newpoi, p);
+                                this.model.getNucleus(foundd).setPoint(newpoi, p);
                                 
                             }
                                 
-                            LifeScience.LOG.info("FOUND" + found);
+                            LifeScience.LOG.info("FOUND" + foundd);
                             
                             break;
                         }
-                    }*/
+                    }
+                    this.image.setSlice(i+1);
                     this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
                 }
                 
