@@ -108,26 +108,39 @@ public class CellTrackerRelate extends Processor {
                 // if no match found create new nucleus ---> to be related yet
                 // go through previous images and search for match
                 if(!matchfound){
-                    for(int o=i-1; o>0; o--){
+                    for(int o=i-1; o>Math.max(0, i-10); o--){
                         this.image.setSlice(o+1);
                         // Get potential matches in old pointset (get k nearest neighbor points)
                         Integer[] kNNN = this.model.getkNearestNuclei(this.k, newpoi.x, newpoi.y, o-1, this.maxDistanceDiff);
                         int foundd = this.findMatch(kNNN, newpoi, o);
                         if(foundd < this.model.getNucleiCount()){
-                            //interpolate
-                            for(int p=o; p<i; p++){
-                                LifeScience.LOG.info(""+p);
-                                this.model.getNucleus(foundd).setPoint(newpoi, p);
-                                
-                            }
-                                
-                            LifeScience.LOG.info("FOUND" + foundd);
+                            //interpolate get old coordinates
+                            int oldx = this.model.getNucleus(foundd).getPoint(o-1).x;
+                            int oldy = this.model.getNucleus(foundd).getPoint(o-1).y;
+                            int newx = newpoi.x;
+                            int newy = newpoi.y;
+                            int diffx = oldx - newx;
+                            int diffy = oldy - newy;
+                            //LifeScience.LOG.info("INTERPOLATION ");
+                            //LifeScience.LOG.info("Oldpoint " + oldx + ", " + oldy);
+                            //LifeScience.LOG.info("Newpoint " + newx + ", " + newy);
                             
+                            double percent = 1.0/(((i+1)-o) * 1.0);
+                            int multiplicator = 1;
+                            for(int p=o; p<=i; p++){
+                                
+                                // calculate interpolation of params                                
+                                Point interpolatedPoint = new Point((int) (oldx - ((multiplicator*percent) * diffx)) , (int) (oldy - (multiplicator*percent * diffy)));
+                                //LifeScience.LOG.info("Setpoint " + interpolatedPoint.x + ", " + interpolatedPoint.y);
+                                this.model.getNucleus(foundd).setPoint(interpolatedPoint, p);
+                                multiplicator++;
+                            }
+                                                            
                             break;
                         }
                     }
                     this.image.setSlice(i+1);
-                    this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
+                    //this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
                 }
                 
                 this.detector.groupNuclei();
@@ -163,11 +176,16 @@ public class CellTrackerRelate extends Processor {
                         
                 Nucleus oldnuc = this.model.getNucleus(kNN[j]);
                 Point oldpoi = oldnuc.getPoint(index-1);
-
-                // Select point if intensity does not variate to much
-                if(Math.abs(this.image.getPixel(oldpoi.x, oldpoi.y)[0]-this.image.getPixel(newpoi.x, newpoi.y)[0])<this.maxIntesityDiff){
-                    return kNN[j];
+                // TODO check if oldpoi is free to be assigned
+                
+                // select point if not yet set
+                if(oldnuc.getPoint(index)==null){
+                    // Select point if intensity does not variate to much
+                    if(Math.abs(this.image.getPixel(oldpoi.x, oldpoi.y)[0]-this.image.getPixel(newpoi.x, newpoi.y)[0])<this.maxIntesityDiff){
+                        return kNN[j];
+                    }
                 }
+                
              }
           }
           return this.model.getNucleiCount()+1;
