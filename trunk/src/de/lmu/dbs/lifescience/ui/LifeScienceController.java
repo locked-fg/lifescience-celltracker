@@ -120,6 +120,7 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 this.model.setStatus(LifeScienceModel.Status.IMAGEENHANCED);
                 break;
             case "Detect Cells":
+                
                 this.detector = new CellDetector(this.model);
                 detector.run();
                 detector.groupNuclei();
@@ -136,7 +137,8 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
                 break;
             case "Track Cells":
                 // rolling ball 30 else 40
-                CellTrackerRelate tracker = new CellTrackerRelate(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 60, 4);
+                //CellTrackerFollow tracker = new CellTrackerFollow(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5));
+                CellTrackerRelate tracker = new CellTrackerRelate(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 50, 4, 10);
                 tracker.run();
                 
                 this.model.drawNuclei();

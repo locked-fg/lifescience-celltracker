@@ -56,7 +56,7 @@ public class CellDetector extends Processor {
         MaximumFinder maxfind = new MaximumFinder();
         maxfind.setup(null, this.image);
         // rolling ball 8 - else 10
-        maxfind.findMaxima(process, 10, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
+        maxfind.findMaxima(process, 20, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
 
         if (this.image.getRoi() instanceof PointRoi){
             // Build data set

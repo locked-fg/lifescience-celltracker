@@ -52,6 +52,10 @@ public class ImageEnhancer extends Processor {
         
         // get processor
         ByteProcessor process = (ByteProcessor) this.image.getProcessor();
+        
+        // Enhance Contrast
+        ContrastEnhancer contrast = new ContrastEnhancer();
+        ij.IJ.run("Enhance Contrast", "saturated=0.4 normalize_all");
        
         // Reduce Noise and substract background
         RankFilters filter = new RankFilters();
@@ -59,6 +63,8 @@ public class ImageEnhancer extends Processor {
         for(int i=1; i<=this.image.getStackSize(); i++ ){
             this.image.setSliceWithoutUpdate(i);
             filter.rank(process, 4, RankFilters.MEDIAN);
+            // TODO test smoothing...
+            // process.smooth();
             if(!this.quickEnhance){
                 substract.rollingBallBackground(process, this.model.getNucleiDiameter()/2, false, false, false, true, true);
             }
@@ -66,10 +72,8 @@ public class ImageEnhancer extends Processor {
         //reset slice
         this.image.setSliceWithoutUpdate(1);
         
-        // Enhance Contrast
-        ContrastEnhancer contrast = new ContrastEnhancer();
-                
-        contrast.stretchHistogram(process, 0.1);
+        
+        //contrast.stretchHistogram(process, 0.1);
                
         // update image
         this.image.updateAndDraw();

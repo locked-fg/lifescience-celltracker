@@ -29,6 +29,9 @@ public class CellTrackerRelate extends Processor {
     
     /** Cell Detector */
     CellDetector detector;
+    
+    /** Backtracking Frames */
+    int backtracking;
 
     
     
@@ -51,14 +54,16 @@ public class CellTrackerRelate extends Processor {
      * @param maxDistanceDiff Maximal distance that detected blobs can vary between slices of the sequence
      * @param maxIntensityDiff Maximal difference in intensity that can occur from one blob to corresponing blob in next slice
      * @param k Size of resultset from nearest-neighbor-search of blobs
+     * @param backtracking Number of frames the backtracking is done if no immediate correspondance is found
      */
-    public CellTrackerRelate(LifeScienceModel model, CellDetector detector, int maxDistanceDiff, int maxIntensityDiff, int k) {
+    public CellTrackerRelate(LifeScienceModel model, CellDetector detector, int maxDistanceDiff, int maxIntensityDiff, int k, int backtracking) {
         super(model);
         this.image = this.model.getImage();
         this.detector = detector;
         this.maxDistanceDiff = maxDistanceDiff;
         this.maxIntesityDiff = maxIntensityDiff;
         this.k = k;
+        this.backtracking = backtracking;
     }
     
     
@@ -108,7 +113,7 @@ public class CellTrackerRelate extends Processor {
                 // if no match found create new nucleus ---> to be related yet
                 // go through previous images and search for match
                 if(!matchfound){
-                    for(int o=i-1; o>Math.max(0, i-10); o--){
+                    for(int o=i-1; o>Math.max(0, i-this.backtracking); o--){
                         this.image.setSlice(o+1);
                         // Get potential matches in old pointset (get k nearest neighbor points)
                         Integer[] kNNN = this.model.getkNearestNuclei(this.k, newpoi.x, newpoi.y, o-1, this.maxDistanceDiff);
@@ -146,6 +151,8 @@ public class CellTrackerRelate extends Processor {
                 this.detector.groupNuclei();
                 
             }
+            
+            this.detector.groupNuclei();
 
         }
         
