@@ -73,7 +73,7 @@ public class ImageEnhancer extends Processor {
         this.image.setSliceWithoutUpdate(1);
         
         
-        //contrast.stretchHistogram(process, 0.1);
+        //contrast.stretchHistogram(process, 0.4);
                
         // update image
         this.image.updateAndDraw();

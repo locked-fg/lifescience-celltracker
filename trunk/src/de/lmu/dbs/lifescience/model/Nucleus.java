@@ -23,6 +23,12 @@ public class Nucleus {
     /** The cell to which contains this nucleus */
     private Cell cell;
     
+    /** Time nucleus was first detected */
+    private int starttime;
+    
+    /** Time nucleus was last detected */
+    private int stoptime;
+    
     
     //---------------- Constructor
     /**
@@ -56,7 +62,10 @@ public class Nucleus {
     public Nucleus(int sequenceLength, Point p, int index){
         this.points = new Point[sequenceLength];
         this.points[index] = p;
+        this.starttime = index;
     }
+    
+    
     
     
     //---------------- Methods

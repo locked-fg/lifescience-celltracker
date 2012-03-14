@@ -145,6 +145,14 @@ public class CellTrackerRelate extends Processor {
                         }
                     }
                     this.image.setSlice(i+1);
+                    
+                    // TODO enter new Nucleus if mitotic event 
+                    // enter new Nucleus if near image boundaries
+                    if(newpoi.x < 10 || newpoi.x > (this.image.getWidth()-10) ||
+                            newpoi.y < 10 || newpoi.y > (this.image.getHeight()-10) ){
+                        this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
+                        
+                    }
                     //this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
                 }
                 
@@ -177,13 +185,12 @@ public class CellTrackerRelate extends Processor {
                 
          // Test all nearest neighbors until match found
          for(int j=0; j<kNN.length; j++){
-             // TODO - kNN only returns one neighbor - LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
+
              if(kNN[j] != null){
                 //LifeScience.LOG.info("kNN - " + j + ": " +kNN[j]);
                         
                 Nucleus oldnuc = this.model.getNucleus(kNN[j]);
                 Point oldpoi = oldnuc.getPoint(index-1);
-                // TODO check if oldpoi is free to be assigned
                 
                 // select point if not yet set
                 if(oldnuc.getPoint(index)==null){

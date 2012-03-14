@@ -700,9 +700,19 @@ public class LifeScienceModel extends Observable{
                     oval.setName("" + i);
                     if(this.cells.get(i).isTetraploid()){
                         oval.setStrokeColor(Color.red);
+                    }else{
+                        oval.setStrokeColor(Color.cyan);
                     }
+                    
+                    // draw mitosis
+                    if(this.cells.get(i).getTimeStartMitosis()> 1 && this.cells.get(i).getTimeStartMitosis()==(j+1) ){
+                        oval.setStrokeColor(Color.GREEN);
+                    }
+                    
                     oval.setPosition(j+1);
                     this.overlay.add(oval);
+                    
+                    
                 }
             }
         }
@@ -802,6 +812,80 @@ public class LifeScienceModel extends Observable{
         this.notifyObservers();
         this.image.updateAndDraw();
     }
+    
+    
+    /** 
+     *  detect mitotic events from intensity differences
+     */
+    public void detectMitosis(){
+         String teststring = "";
+
+        // go through all detected nuclei
+        for(int i=0; i<this.nuclei.size(); i++){
+            
+            double minintensity = 255;
+            double maxintensity = 0;
+            int maxintensityframe = 0;
+            double meanintensity = 0;
+            int count = 0;
+            // get intensity for each time
+            for(int j=0; j<this.image.getStackSize(); j++){
+                this.image.setSlice(j+1);
+                Point poi = this.nuclei.get(i).getPoint(j);
+                if(poi != null){
+                    int intens1 = this.image.getPixel(poi.x, poi.y)[0];
+                    int intens2 = this.image.getPixel(poi.x-1, poi.y)[0];
+                    int intens3 = this.image.getPixel(poi.x+1, poi.y)[0];
+                    int intens4 = this.image.getPixel(poi.x, poi.y-1)[0];
+                    int intens5 = this.image.getPixel(poi.x, poi.y+1)[0];
+                    double mean = (intens1 + intens2 + intens3 + intens4 + intens5)/5;
+                    if(mean < minintensity){ minintensity = mean; }
+                    if(mean > maxintensity){ maxintensity = mean; maxintensityframe = j+1; }
+                    meanintensity+=mean;
+                    count++;                    
+                }
+                
+            }
+            double meanintens = (meanintensity*1.0)/(count*1.0);
+            if(maxintensity>0 && minintensity < 255 && (maxintensity - meanintens)>100 && this.nuclei.get(i).getCell()!=null){
+                this.nuclei.get(i).getCell().setTimeStartMitosis(maxintensityframe);
+                //LifeScience.LOG.info("Cell " + this.cells.indexOf(this.nuclei.get(i).getCell()) + " Minintensity " + minintensity + " Maxintensity " + maxintensity + " Meanintensity " + meanintens);
+            }
+        }
+    }
+    
+    
+    
+    /** 
+     *  detect mitotic events from intensity differences
+     */
+    public void printIntensityCourse(int cell){
+        String teststring = "";
+        Nucleus nuc = this.cells.get(cell).getNuclei()[0];
+        // go through all detected nuclei
+       
+            // get intensity for each time
+            for(int j=0; j<this.image.getStackSize(); j++){
+                this.image.setSlice(j+1);
+                Point poi = nuc.getPoint(j);
+                if(poi != null){
+                    int intens1 = this.image.getPixel(poi.x, poi.y)[0];
+                    int intens2 = this.image.getPixel(poi.x-1, poi.y)[0];
+                    int intens3 = this.image.getPixel(poi.x+1, poi.y)[0];
+                    int intens4 = this.image.getPixel(poi.x, poi.y-1)[0];
+                    int intens5 = this.image.getPixel(poi.x, poi.y+1)[0];
+                    double mean = (intens1 + intens2 + intens3 + intens4 + intens5)/5;
+                    
+                    teststring += (";" + (int) mean);
+                    
+                    
+                }
+                
+            }
+        LifeScience.LOG.info(teststring);
+        
+    }
+    
     
     
     /**

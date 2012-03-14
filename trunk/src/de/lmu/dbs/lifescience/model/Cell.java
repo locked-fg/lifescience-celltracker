@@ -129,6 +129,14 @@ public class Cell {
     }
     
     /**
+     * Set frame at which mitosis started
+     */
+    public void setTimeStartMitosis(int frame){
+        this.timeMitosisStart = frame-1;
+    }
+    
+    
+    /**
      * Get the frame index at which cell died
      * @return timeDeath
      */

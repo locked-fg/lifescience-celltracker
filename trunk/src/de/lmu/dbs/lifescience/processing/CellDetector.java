@@ -56,7 +56,7 @@ public class CellDetector extends Processor {
         MaximumFinder maxfind = new MaximumFinder();
         maxfind.setup(null, this.image);
         // rolling ball 8 - else 10
-        maxfind.findMaxima(process, 20, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
+        maxfind.findMaxima(process, 15, ImageProcessor.NO_THRESHOLD, MaximumFinder.POINT_SELECTION, true, false);
 
         if (this.image.getRoi() instanceof PointRoi){
             // Build data set
@@ -76,7 +76,6 @@ public class CellDetector extends Processor {
 
             }else{
                 for(int i=0; i < xcoords.length; i++){
-                    //TODO look in previous 10 cells and group nuclei if distance is smaller than cell radius
                     // works becaus coordinates are sorted by intensity of pixels. corresponding nuclei mostly have similar intensities.
                     //TODO split nuclei through watershed algorithm
                     //create new nucleus
@@ -101,24 +100,30 @@ public class CellDetector extends Processor {
         int index = this.model.getImage().getCurrentSlice()-1;
         for(int i=0; i < this.model.getNucleiCount(); i++){
             Nucleus nuc = this.model.getNucleus(i);
-            if(nuc.getCell()!=null){
+            if(nuc.getCell()!=null || nuc.getPoint(index)==null){
                 continue;
             }
-            for(int j=-20; j < 20; j++){
-                // group nuclei if distance is smaller than average nuclei diameter
-                if((0 <= i+j) && (i+j < this.model.getNucleiCount()) && (j !=0) ){
-                    Nucleus nucc = this.model.getNucleus(i+j);
+            
+            
+            Integer[] kNN = this.model.getkNearestNuclei(2, nuc.getPoint(index).x, nuc.getPoint(index).y, index, this.model.getNucleiDiameter());
+            if(kNN != null && kNN[1] != null){
+                    Nucleus nucc = this.model.getNucleus(kNN[1]);
                     if(nucc.getCell()==null &&
                             nucc.getPoint(index)!=null &&
                             nuc.getPoint(index)!=null &&
-                            nucc.getPoint(index).distance(nuc.getPoint(index)) < (this.model.getNucleiDiameter())){
+                            nucc.getPoint(index).distance(nuc.getPoint(index)) < (this.model.getNucleiDiameter()*0.7) &&
+                            ((this.model.getImage().getPixel(nuc.getPoint(index).x, nuc.getPoint(index).y)[0]-
+                            this.model.getImage().getPixel(nucc.getPoint(index).x, nucc.getPoint(index).y)[0])<20)
+                            ){
                         Cell cell = new Cell(nuc);
                         cell.addNucleus(nucc);
                         this.model.addCell(cell);
-                        break;
                     }
-                }
-            }
+             }
+             
+            
+            
+           
         }
     }
     
@@ -134,7 +139,7 @@ public class CellDetector extends Processor {
                     nucs[0].getPoint(j)!=null && nucs[1].getPoint(j)!=null){
                     // calculate euclidean distance and delete second nucleus if necessary
                     double euclid = Math.sqrt(Math.pow((nucs[0].getPoint(j).x - nucs[1].getPoint(j).x), 2.0) + Math.pow((nucs[0].getPoint(j).y - nucs[1].getPoint(j).y), 2.0));
-                    if(euclid > this.model.getNucleiDiameter()*2){
+                    if(euclid > this.model.getNucleiDiameter()*1.8){
                         this.model.getCell(i).removeNucleus();
                     }
                 }

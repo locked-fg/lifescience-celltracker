@@ -138,9 +138,19 @@ public class LifeScienceController implements ActionListener, MouseListener, Win
             case "Track Cells":
                 // rolling ball 30 else 40
                 //CellTrackerFollow tracker = new CellTrackerFollow(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5));
-                CellTrackerRelate tracker = new CellTrackerRelate(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 50, 4, 10);
+                CellTrackerRelate tracker = new CellTrackerRelate(this.model, this.detector, (int) (this.model.getNucleiDiameter()*1.5), 40, 3, 10);
                 tracker.run();
                 
+                this.model.detectMitosis();
+                this.model.printIntensityCourse(51);
+                this.model.printIntensityCourse(49);
+                this.model.printIntensityCourse(57);
+                this.model.printIntensityCourse(32);
+                this.model.printIntensityCourse(50);
+                this.model.printIntensityCourse(23);
+                this.model.printIntensityCourse(28);
+                this.model.printIntensityCourse(62);
+                this.model.resetOverlay();
                 this.model.drawNuclei();
                 this.model.drawCells();
                 
