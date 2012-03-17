@@ -221,6 +221,7 @@ public class LifeScienceModel extends Observable{
         info += this.getNucleiCount() + " nuclei found <br><br>";
         info += this.getCellCount() + " cells found <br><br>";
         info += this.countTetraploids() + " tetraploids found <br><br>";
+        info += this.countMitoticEvents() + " mitotic events found <br><br>";
         info += "</html>";
         return info;
     }
@@ -234,6 +235,20 @@ public class LifeScienceModel extends Observable{
         int count = 0;
         for(int i=0; i<this.cells.size(); i++){
             if(this.cells.get(i).isTetraploid()){
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    /**
+     * Number of mitotic events
+     * @return int
+     */
+    public int countMitoticEvents(){
+        int count = 0;
+        for(int i=0; i<this.cells.size(); i++){
+            if(this.cells.get(i).getTimeStartMitosis() > 1){
                 count++;
             }
         }
@@ -262,8 +277,8 @@ public class LifeScienceModel extends Observable{
             for(int i=0; i<this.cells.size(); i++){
                 Cell cell = this.cells.get(i);
                 this.results.addValue("Cell", i);
-                this.results.addValue("TrackStart", 1);
-                this.results.addValue("TrackEnd", this.image.getStackSize());
+                this.results.addValue("TrackStart", cell.getTimeStart());
+                this.results.addValue("TrackEnd", cell.getTimeEnd());
                 int ploidy = 2;
                 if(cell.isTetraploid()){
                     ploidy = 4;
@@ -274,8 +289,7 @@ public class LifeScienceModel extends Observable{
                     this.results.addValue("Position-Y", cell.getNuclei()[0].getPoint(0).y);
                 }
                 this.results.addValue("Fate", 0);
-                this.results.addValue("MitosisStart", cell.getTimeStartMitosis());
-                this.results.addValue("MitosisEnd", cell.getTimeEndMitosis());
+                this.results.addValue("Mitosis", cell.getTimeStartMitosis());
                 this.results.addValue("Death", cell.getTimeDeath());
                 this.results.addLabel("Comment", "");
                 
@@ -813,6 +827,47 @@ public class LifeScienceModel extends Observable{
         this.image.updateAndDraw();
     }
     
+    
+    /**
+     * set start and end of tracking
+     */
+    public void setStartStop(){
+        for(int i=0; i<this.cells.size(); i++){
+            Cell cell = this.cells.get(i);
+            Nucleus nuc1 = cell.getNuclei()[0];
+            int startpoint = 0;
+            int endpoint = this.image.getStackSize();
+            for(int j=0; j<this.image.getStackSize(); j++){
+                if(nuc1.getPoint(j)!=null && startpoint == 0){
+                    startpoint = j+1;
+                }
+                if(startpoint != 0 && nuc1.getPoint(j)==null && endpoint == this.image.getStackSize()){
+                    endpoint = j+1;
+                }
+            }
+            if(cell.isTetraploid()){
+                int startpoint2 = this.image.getStackSize();
+                int endpoint2 = this.image.getStackSize();
+                Nucleus nuc2 = cell.getNuclei()[1];
+                for(int j=0; j<this.image.getStackSize(); j++){
+                    if(nuc2.getPoint(j)!=null && startpoint2 == 0){
+                        startpoint2 = j+1;
+                    } 
+                    if(startpoint2 != 0 && nuc2.getPoint(j)==null && endpoint2 == this.image.getStackSize()){
+                        endpoint2 = j+1;
+                    }
+                }
+                startpoint = Math.min(startpoint, startpoint2);
+                endpoint = Math.max(endpoint, endpoint2);
+                
+            }
+            cell.setTimeStart(startpoint);
+            cell.setTimeEnd (endpoint);
+            
+            
+        }
+        
+    }
     
     /** 
      *  detect mitotic events from intensity differences

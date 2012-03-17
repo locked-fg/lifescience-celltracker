@@ -151,9 +151,7 @@ public class CellTrackerRelate extends Processor {
                     if(newpoi.x < 10 || newpoi.x > (this.image.getWidth()-10) ||
                             newpoi.y < 10 || newpoi.y > (this.image.getHeight()-10) ){
                         this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
-                        
                     }
-                    //this.model.addNucleus(new Nucleus(this.image.getStackSize(), newpoi, i));
                 }
                 
                 this.detector.groupNuclei();

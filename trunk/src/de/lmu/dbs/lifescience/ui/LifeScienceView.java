@@ -291,7 +291,7 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
         jToggleButtonDetectionLabels.setToolTipText("Show labels");
         jToggleButtonDetectionLabels.setActionCommand("Show Labels");
 
-        jLabelDetectionInfo.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        jLabelDetectionInfo.setFont(new java.awt.Font("Arial", 0, 12));
         jLabelDetectionInfo.setForeground(new java.awt.Color(89, 97, 107));
         jLabelDetectionInfo.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabelDetectionInfo.setToolTipText("");
@@ -522,7 +522,11 @@ public class LifeScienceView extends javax.swing.JFrame implements Observer {
      * Initialise Controller and add Actionlisteners to Buttons
      * @param controller 
      */
-    public void initController(ActionListener controller){        
+    public void initController(ActionListener controller){
+        // hide yet unused gui elements
+        this.jToggleButtonDetectionEditCells.setVisible(false);
+        this.jToggleButtonDetectionComment.setVisible(false);
+        
         this.jButtonImport.addActionListener(controller);
         this.jButtonDetection.addActionListener(controller);
         this.jButtonExportCSV.addActionListener(controller);

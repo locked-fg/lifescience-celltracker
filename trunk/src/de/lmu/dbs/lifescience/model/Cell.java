@@ -16,8 +16,14 @@ public class Cell {
     
     //---------------- Attributes
     
-    /** Frame number the Cell first occured */
+    /** Frame number the Cell was born */
     private int timeBirth;
+    
+    /** Frame number the Cell first occured */
+    private int timeStart;
+    
+    /** Frame number the Cell lasts occured */
+    private int timeEnd;
     
     /** Frame number the Cell dieds */
     private int timeDeath;
@@ -130,11 +136,44 @@ public class Cell {
     
     /**
      * Set frame at which mitosis started
+     * @param frame
      */
     public void setTimeStartMitosis(int frame){
         this.timeMitosisStart = frame-1;
     }
     
+    /**
+     * Set start time of track
+     * @param frame 
+     */
+    public void setTimeStart(int frame){
+        this.timeStart = frame;
+    }
+    
+    /**
+     * Set start time of track
+     * @param frame 
+     */
+    public void setTimeEnd(int frame){
+        this.timeEnd = frame;
+    }
+    
+    /**
+     * Get time the tracking ended
+     * @return int
+     */
+    public int getTimeEnd(){
+        return this.timeEnd;
+    }
+    
+     /**
+     * Get time the tracking started
+     * @return int
+     */
+    public int getTimeStart(){
+        return this.timeStart;
+    }
+   
     
     /**
      * Get the frame index at which cell died
